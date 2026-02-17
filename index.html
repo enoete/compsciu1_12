@@ -193,8 +193,8 @@ li{margin:8px 0;}
   </table>
 
   <div class="infobox yellow">
-    <h4>💡 Quick Tip: The Header Files</h4>
-    <p>Your textbook uses <code>#include&lt;conio.h&gt;</code> (for <code>getch()</code>) which is old Turbo C syntax. In modern GCC/Code::Blocks you typically only need <code>#include&lt;stdio.h&gt;</code>. If <code>getch()</code> doesn't work, use <code>getchar()</code> instead — they do the same thing!</p>
+    <h4>💡 Quick Tip: The Header File You Need</h4>
+    <p>All you need is <code>#include&lt;stdio.h&gt;</code> — this gives you <code>printf</code> and <code>scanf</code>, which are the two functions you will use most. Some old textbooks also include <code>conio.h</code> but you can ignore it completely.</p>
   </div>
 </div>
 
@@ -208,7 +208,6 @@ li{margin:8px 0;}
    Description: What this program does */</span>
 
 <span class="k">#include</span> <span class="s">&lt;stdio.h&gt;</span>    <span class="c">// Pre-processor directive — includes standard I/O library</span>
-<span class="k">#include</span> <span class="s">&lt;conio.h&gt;</span>   <span class="c">// Adds getch() — used in older/textbook compilers</span>
 
 <span class="k">int</span> main() {           <span class="c">// MAIN function — every C program starts here</span>
     <span class="c">// ── Variable declarations go here ──</span>
@@ -219,7 +218,6 @@ li{margin:8px 0;}
     <span class="k">printf</span>(<span class="s">"Hi! Welcome to C\n"</span>);
 
     <span class="k">return</span> 0;          <span class="c">// Tells the OS: "program finished successfully"</span>
-    <span class="k">getch</span>();            <span class="c">// Pauses screen until a key is pressed</span>
 }</pre></div>
 
   <h3>Breaking It Down — Line by Line</h3>
@@ -232,7 +230,6 @@ li{margin:8px 0;}
       <tr><td><code>int main()</code></td><td>The boss function — every C program must have one and only one</td><td>✅ Yes</td></tr>
       <tr><td><code>{ }</code></td><td>Curly braces define the body (start and end) of a block</td><td>✅ Yes</td></tr>
       <tr><td><code>return 0;</code></td><td>Exits main and tells the OS the program ran successfully (0 = no errors)</td><td>✅ Yes</td></tr>
-      <tr><td><code>getch();</code></td><td>Holds the output window open until a key is pressed</td><td>No (compiler-specific)</td></tr>
     </tbody>
   </table>
 
