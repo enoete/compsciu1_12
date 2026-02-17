@@ -1,0 +1,1743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C Programming: Hands-On Coding Lab | CFBC</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&family=Exo+2:wght@400;600;700&display=swap');
+:root{--neon:#00ff88;--neon2:#00cfff;--bg:#0a0e1a;--bg2:#0f1629;--card:#131d35;--card2:#1a2540;--orange:#ff6b35;--purple:#a855f7;--yellow:#ffd93d;--red:#ff4757;--white:#e8f4ff;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Exo 2',sans-serif;background:var(--bg);color:var(--white);min-height:100vh;line-height:1.7;overflow-x:hidden;}
+body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(0deg,transparent,transparent 40px,rgba(0,255,136,0.015) 40px,rgba(0,255,136,0.015) 41px),repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(0,255,136,0.015) 40px,rgba(0,255,136,0.015) 41px);pointer-events:none;z-index:0;}
+.container{max-width:1100px;margin:0 auto;padding:20px;position:relative;z-index:1;}
+header{text-align:center;padding:50px 20px 30px;position:relative;}
+header::after{content:'';display:block;width:200px;height:3px;background:linear-gradient(90deg,transparent,var(--neon),transparent);margin:20px auto 0;}
+.game-badge{display:inline-block;background:linear-gradient(135deg,var(--purple),#7c3aed);padding:6px 18px;border-radius:20px;font-size:.8rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:15px;}
+h1{font-family:'Orbitron',monospace;font-size:2.6rem;background:linear-gradient(135deg,var(--neon),var(--neon2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.2;margin-bottom:10px;}
+header p{color:#8899bb;font-size:1.1rem;}
+.xp-bar{background:var(--card);border-radius:30px;height:24px;margin:20px auto;max-width:500px;border:1px solid rgba(0,255,136,.2);overflow:hidden;position:relative;}
+.xp-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--neon),var(--neon2));border-radius:30px;transition:width 1s ease;}
+.xp-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:.8rem;font-weight:700;color:var(--bg);font-family:'Orbitron',monospace;}
+.nav-tabs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:30px;padding:20px;background:var(--card);border-radius:16px;border:1px solid rgba(0,255,136,.1);}
+.nav-tab{padding:10px 20px;border:2px solid rgba(0,255,136,.2);border-radius:25px;cursor:pointer;font-size:.9rem;font-weight:700;font-family:'Exo 2',sans-serif;background:transparent;color:#8899bb;transition:all .3s;}
+.nav-tab:hover{border-color:var(--neon);color:var(--neon);transform:translateY(-2px);}
+.nav-tab.active{background:linear-gradient(135deg,#00ff8822,#00cfff22);border-color:var(--neon);color:var(--neon);box-shadow:0 0 20px rgba(0,255,136,.2);}
+.section{display:none;animation:fadeUp .5s ease;}
+.section.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+.card{background:var(--card);border-radius:20px;padding:30px;margin-bottom:25px;border:1px solid rgba(0,255,136,.1);box-shadow:0 8px 32px rgba(0,0,0,.4);}
+.card h2{font-family:'Orbitron',monospace;font-size:1.5rem;color:var(--neon);margin-bottom:20px;display:flex;align-items:center;gap:12px;}
+.card h3{color:var(--yellow);font-size:1.15rem;margin:20px 0 12px;}
+.card h4{color:var(--neon2);font-size:1rem;margin:15px 0 8px;}
+.card p{color:#c0d4ee;margin-bottom:12px;}
+.infobox{padding:20px;border-radius:14px;margin:18px 0;}
+.infobox.green{background:rgba(0,255,136,.08);border-left:4px solid var(--neon);}
+.infobox.blue{background:rgba(0,207,255,.08);border-left:4px solid var(--neon2);}
+.infobox.orange{background:rgba(255,107,53,.08);border-left:4px solid var(--orange);}
+.infobox.yellow{background:rgba(255,217,61,.08);border-left:4px solid var(--yellow);}
+.infobox.purple{background:rgba(168,85,247,.08);border-left:4px solid var(--purple);}
+.infobox.red{background:rgba(255,71,87,.08);border-left:4px solid var(--red);}
+code,.code-block{font-family:'Share Tech Mono',monospace;}
+.code-block{background:#060c1a;border-radius:12px;padding:20px;margin:14px 0;border:1px solid rgba(0,255,136,.15);overflow-x:auto;font-size:.92rem;line-height:1.8;}
+.code-block .c{color:#68d391;}
+.code-block .k{color:#63b3ed;}
+.code-block .s{color:#fbd38d;}
+.code-block .n{color:#fc8181;}
+.code-block .v{color:#e9c46a;}
+.code-block .w{color:#a8dadc;}
+pre{white-space:pre-wrap;word-wrap:break-word;}
+table.op-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.95rem;}
+table.op-table th{background:linear-gradient(135deg,#1a2540,#243050);padding:12px 15px;text-align:left;color:var(--neon);font-family:'Orbitron',monospace;font-size:.85rem;}
+table.op-table td{padding:12px 15px;border-bottom:1px solid rgba(255,255,255,.07);color:#c0d4ee;}
+table.op-table tr:hover td{background:rgba(0,255,136,.04);}
+table.op-table code{color:var(--yellow);background:rgba(255,217,61,.1);padding:2px 8px;border-radius:4px;}
+.lab-box{background:linear-gradient(135deg,#0d1f3c,#102040);border:2px solid var(--neon2);border-radius:16px;padding:25px;margin:20px 0;position:relative;}
+.lab-badge{position:absolute;top:-13px;left:20px;background:var(--neon2);color:var(--bg);padding:4px 16px;border-radius:20px;font-size:.8rem;font-weight:700;font-family:'Orbitron',monospace;letter-spacing:1px;}
+.lab-box h4{color:var(--neon2);margin-top:10px;font-size:1.1rem;}
+.task-list{list-style:none;margin:12px 0;}
+.task-list li{padding:8px 0 8px 28px;position:relative;color:#c0d4ee;}
+.task-list li::before{content:'▶';position:absolute;left:0;color:var(--neon);font-size:.8rem;top:10px;}
+.btn-row{display:flex;flex-wrap:wrap;gap:10px;margin:15px 0;}
+.btn{padding:10px 22px;border:none;border-radius:25px;cursor:pointer;font-family:'Exo 2',sans-serif;font-weight:700;font-size:.9rem;transition:all .3s;position:relative;overflow:hidden;}
+.btn-hint{background:linear-gradient(135deg,#d69e2e,#b7791f);color:#1a1a2e;}
+.btn-answer{background:linear-gradient(135deg,#48bb78,#2f855a);color:white;}
+.btn-submit{background:linear-gradient(135deg,var(--neon),var(--neon2));color:var(--bg);}
+.btn:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,.4);}
+.hint-box,.answer-box{display:none;margin-top:14px;padding:16px;border-radius:12px;animation:fadeUp .4s ease;}
+.hint-box{background:rgba(255,217,61,.07);border:1px solid rgba(255,217,61,.3);}
+.hint-box.show,.answer-box.show{display:block;}
+.answer-box{background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.25);}
+.answer-box .code-block{border-color:rgba(0,255,136,.3);}
+.easter-egg{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--card2);border:3px solid var(--purple);border-radius:20px;padding:30px 40px;text-align:center;z-index:1000;box-shadow:0 20px 60px rgba(168,85,247,.4);animation:popIn .4s cubic-bezier(.175,.885,.32,1.275);}
+.easter-egg.show{display:block;}
+@keyframes popIn{from{transform:translate(-50%,-50%) scale(.5);opacity:0;}to{transform:translate(-50%,-50%) scale(1);opacity:1;}}
+.egg-title{font-family:'Orbitron',monospace;font-size:1.8rem;color:var(--purple);margin-bottom:10px;}
+.egg-close{background:var(--purple);color:white;border:none;padding:10px 25px;border-radius:20px;cursor:pointer;font-family:'Exo 2',sans-serif;font-weight:700;margin-top:15px;}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:999;}
+.overlay.show{display:block;}
+.quiz-q{background:var(--card2);border-radius:14px;padding:22px;margin:18px 0;border-left:4px solid var(--neon);}
+.quiz-q h4{color:var(--white);margin-bottom:14px;font-size:1rem;}
+.quiz-opts{display:grid;gap:8px;}
+.quiz-opt{padding:12px 18px;background:rgba(255,255,255,.05);border:2px solid rgba(255,255,255,.1);border-radius:10px;cursor:pointer;color:#c0d4ee;transition:all .3s;font-family:'Exo 2',sans-serif;}
+.quiz-opt:hover{border-color:var(--neon2);color:var(--white);}
+.quiz-opt.chosen{border-color:var(--neon2);background:rgba(0,207,255,.1);color:var(--white);}
+.quiz-opt.correct{border-color:var(--neon);background:rgba(0,255,136,.15);color:var(--neon);}
+.quiz-opt.wrong{border-color:var(--red);background:rgba(255,71,87,.1);color:var(--red);}
+.qfeedback{margin-top:12px;padding:12px;border-radius:10px;font-weight:600;display:none;}
+.qfeedback.show{display:block;}
+.qfeedback.ok{background:rgba(0,255,136,.1);color:var(--neon);}
+.qfeedback.no{background:rgba(255,71,87,.1);color:var(--red);}
+.progress-wrap{background:var(--card2);border-radius:30px;height:12px;margin:15px 0;overflow:hidden;}
+.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--neon),var(--neon2));transition:width .5s ease;border-radius:30px;}
+.result-box{background:linear-gradient(135deg,#1a3a2a,#0a2a1a);border:2px solid var(--neon);border-radius:20px;padding:30px;text-align:center;margin-top:25px;display:none;}
+.result-box.show{display:block;animation:fadeUp .5s ease;}
+.result-score{font-family:'Orbitron',monospace;font-size:3rem;color:var(--neon);}
+.trophy{font-size:4rem;margin:10px 0;}
+.section-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--neon),transparent);margin:30px 0;}
+.callout{background:linear-gradient(135deg,rgba(168,85,247,.1),rgba(99,102,241,.1));border:1px solid rgba(168,85,247,.3);border-radius:14px;padding:20px;margin:16px 0;}
+.callout .label{color:var(--purple);font-weight:700;font-family:'Orbitron',monospace;font-size:.85rem;margin-bottom:8px;}
+ul,ol{padding-left:25px;color:#c0d4ee;}
+li{margin:8px 0;}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0;}
+.compare-card{background:var(--card2);border-radius:14px;padding:20px;border:1px solid rgba(255,255,255,.08);}
+.compare-card h4{margin-bottom:12px;font-size:1rem;}
+.compare-card.for-card{border-color:rgba(0,207,255,.3);}
+.compare-card.for-card h4{color:var(--neon2);}
+.compare-card.while-card{border-color:rgba(255,107,53,.3);}
+.compare-card.while-card h4{color:var(--orange);}
+@media(max-width:700px){.compare-grid{grid-template-columns:1fr;}h1{font-size:1.8rem;}}
+.glow{text-shadow:0 0 20px currentColor;}
+.tag{display:inline-block;padding:3px 12px;border-radius:12px;font-size:.78rem;font-weight:700;margin:2px;}
+.tag-green{background:rgba(0,255,136,.15);color:var(--neon);border:1px solid rgba(0,255,136,.3);}
+.tag-blue{background:rgba(0,207,255,.15);color:var(--neon2);border:1px solid rgba(0,207,255,.3);}
+.tag-orange{background:rgba(255,107,53,.15);color:var(--orange);border:1px solid rgba(255,107,53,.3);}
+</style>
+</head>
+<body>
+<div class="overlay" id="overlay" onclick="closeEgg()"></div>
+<div class="easter-egg" id="easter-egg">
+  <div class="egg-title" id="egg-title"></div>
+  <div id="egg-body" style="font-size:1.1rem;color:#c0d4ee;margin:10px 0;"></div>
+  <button class="egg-close" onclick="closeEgg()">Continue Coding!</button>
+</div>
+
+<div class="container">
+<header>
+  <div class="game-badge">🎮 Level Up Your Skills</div>
+  <h1>C PROGRAMMING<br>INTERACTIVE LAB</h1>
+  <p>Operators · Loops · Control Flow · Guided Exercises</p>
+  <div class="xp-bar"><div class="xp-fill" id="xp-fill"></div><div class="xp-text" id="xp-text">0 XP</div></div>
+</header>
+
+<div class="nav-tabs">
+  <button class="nav-tab active" onclick="showSection('intro')">🚀 Start Here</button>
+  <button class="nav-tab" onclick="showSection('operators')">⚡ Operators</button>
+  <button class="nav-tab" onclick="showSection('branching')">🔀 Branching</button>
+  <button class="nav-tab" onclick="showSection('switch')">🔄 Switch</button>
+  <button class="nav-tab" onclick="showSection('forloop')">🔁 For Loop</button>
+  <button class="nav-tab" onclick="showSection('whileloop')">⏳ While Loop</button>
+  <button class="nav-tab" onclick="showSection('refactor')">🛠 Refactor</button>
+  <button class="nav-tab" onclick="showSection('quiz')">🏆 Quiz (25Q)</button>
+</div>
+
+<!-- ===== INTRO ===== -->
+<div id="intro" class="section active">
+<div class="card">
+  <h2>🚀 Welcome to C Programming!</h2>
+  <p>Before we touch operators or loops, let's make sure you understand the <strong>environment</strong>, <strong>structure</strong>, and <strong>rules</strong> of C. Think of this as learning the rules of a game before you start playing — skip it and you'll be confused. Learn it and everything else clicks!</p>
+
+  <div class="infobox purple">
+    <h4>🎮 Why C? The Origin Story</h4>
+    <p>C was created at Bell Labs in 1972 to write the UNIX operating system. It became so powerful that today Python, Java, JavaScript, and even Minecraft's server tools all trace their roots back to C. Learning C means learning the <em>grandfather of modern programming</em>.</p>
+  </div>
+</div>
+
+<div class="card">
+  <h2>🛠 Your Coding Environment</h2>
+  <p>To write and run C programs, you need two things: a <strong>text editor</strong> to write your code, and a <strong>compiler</strong> to translate it into something the computer can run.</p>
+
+  <h3>The Workflow: Source → Compile → Run</h3>
+  <div class="infobox blue">
+    <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;margin:10px 0;">
+      <div style="text-align:center;padding:15px 20px;background:rgba(0,207,255,.1);border-radius:12px;border:1px solid rgba(0,207,255,.3);">
+        <div style="font-size:1.8rem;">📝</div>
+        <div style="color:var(--neon2);font-weight:700;font-size:.9rem;">1. Write</div>
+        <div style="color:#8899bb;font-size:.8rem;">program.c</div>
+      </div>
+      <div style="font-size:1.5rem;color:#8899bb;">→</div>
+      <div style="text-align:center;padding:15px 20px;background:rgba(255,107,53,.1);border-radius:12px;border:1px solid rgba(255,107,53,.3);">
+        <div style="font-size:1.8rem;">⚙️</div>
+        <div style="color:var(--orange);font-weight:700;font-size:.9rem;">2. Compile</div>
+        <div style="color:#8899bb;font-size:.8rem;">gcc program.c</div>
+      </div>
+      <div style="font-size:1.5rem;color:#8899bb;">→</div>
+      <div style="text-align:center;padding:15px 20px;background:rgba(0,255,136,.1);border-radius:12px;border:1px solid rgba(0,255,136,.3);">
+        <div style="font-size:1.8rem;">▶️</div>
+        <div style="color:var(--neon);font-weight:700;font-size:.9rem;">3. Run</div>
+        <div style="color:#8899bb;font-size:.8rem;">./a.out</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Common C Environments</h3>
+  <table class="op-table">
+    <thead><tr><th>Environment</th><th>Type</th><th>Best For</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Code::Blocks</strong></td><td>Desktop IDE</td><td>Beginners — everything in one place</td></tr>
+      <tr><td><strong>Dev-C++</strong></td><td>Desktop IDE</td><td>Lightweight, simple for CAPE students</td></tr>
+      <tr><td><strong>VS Code + GCC</strong></td><td>Editor + Compiler</td><td>Professional, industry standard</td></tr>
+      <tr><td><strong>OnlineGDB</strong></td><td>Browser-based</td><td>No install needed — run C in the browser!</td></tr>
+      <tr><td><strong>NeutronDOS / Turbo C</strong></td><td>Classic IDE</td><td>As shown in your textbook screenshots</td></tr>
+    </tbody>
+  </table>
+
+  <div class="infobox yellow">
+    <h4>💡 Quick Tip: The Header Files</h4>
+    <p>Your textbook uses <code>#include&lt;conio.h&gt;</code> (for <code>getch()</code>) which is old Turbo C syntax. In modern GCC/Code::Blocks you typically only need <code>#include&lt;stdio.h&gt;</code>. If <code>getch()</code> doesn't work, use <code>getchar()</code> instead — they do the same thing!</p>
+  </div>
+</div>
+
+<div class="card">
+  <h2>📋 Anatomy of a C Program</h2>
+  <p>Every C program you write will follow this exact skeleton. Learn this structure by heart — it never changes!</p>
+
+  <div class="code-block"><pre><span class="c">/* Multi-line comment block
+   Author: Your Name
+   Date: Today
+   Description: What this program does */</span>
+
+<span class="k">#include</span> <span class="s">&lt;stdio.h&gt;</span>    <span class="c">// Pre-processor directive — includes standard I/O library</span>
+<span class="k">#include</span> <span class="s">&lt;conio.h&gt;</span>   <span class="c">// Adds getch() — used in older/textbook compilers</span>
+
+<span class="k">int</span> main() {           <span class="c">// MAIN function — every C program starts here</span>
+    <span class="c">// ── Variable declarations go here ──</span>
+    <span class="k">int</span> age;
+    <span class="k">float</span> gpa;
+
+    <span class="c">// ── Your code/logic goes here ──</span>
+    <span class="k">printf</span>(<span class="s">"Hi! Welcome to C\n"</span>);
+
+    <span class="k">return</span> 0;          <span class="c">// Tells the OS: "program finished successfully"</span>
+    <span class="k">getch</span>();            <span class="c">// Pauses screen until a key is pressed</span>
+}</pre></div>
+
+  <h3>Breaking It Down — Line by Line</h3>
+  <table class="op-table">
+    <thead><tr><th>Part</th><th>What it does</th><th>Required?</th></tr></thead>
+    <tbody>
+      <tr><td><code>/* ... */</code></td><td>Multi-line comment — ignored by compiler, for humans to read</td><td>Recommended</td></tr>
+      <tr><td><code>// ...</code></td><td>Single-line comment — everything after <code>//</code> is ignored</td><td>Recommended</td></tr>
+      <tr><td><code>#include &lt;stdio.h&gt;</code></td><td>Loads the library containing <code>printf</code> and <code>scanf</code></td><td>✅ Yes</td></tr>
+      <tr><td><code>int main()</code></td><td>The boss function — every C program must have one and only one</td><td>✅ Yes</td></tr>
+      <tr><td><code>{ }</code></td><td>Curly braces define the body (start and end) of a block</td><td>✅ Yes</td></tr>
+      <tr><td><code>return 0;</code></td><td>Exits main and tells the OS the program ran successfully (0 = no errors)</td><td>✅ Yes</td></tr>
+      <tr><td><code>getch();</code></td><td>Holds the output window open until a key is pressed</td><td>No (compiler-specific)</td></tr>
+    </tbody>
+  </table>
+
+  <div class="infobox red">
+    <h4>⚠️ Syntax Rule #1: Every statement ends with a semicolon <code>;</code></h4>
+    <p>Forgetting a semicolon is the #1 beginner error in C. Every single statement must end with <code>;</code> — it tells the compiler "this instruction is complete." The only exceptions are <code>#include</code> directives and lines with <code>{ }</code>.</p>
+  </div>
+</div>
+
+<div class="card">
+  <h2>📦 Variables and Data Types</h2>
+  <p>A <strong>variable</strong> is a named container in memory that holds a value. In C, you MUST declare every variable before using it — the compiler needs to know how much memory to reserve.</p>
+
+  <div class="infobox green">
+    <h4>Syntax: Declare Before You Use</h4>
+    <div class="code-block"><pre><span class="k">datatype</span> variableName;           <span class="c">// declare only</span>
+<span class="k">datatype</span> variableName = value;   <span class="c">// declare AND assign</span></pre></div>
+  </div>
+
+  <h3>The Four Primary Data Types</h3>
+  <table class="op-table">
+    <thead><tr><th>Type</th><th>Keyword</th><th>Example</th><th>What it stores</th><th>Format</th></tr></thead>
+    <tbody>
+      <tr><td>Integer</td><td><code>int</code></td><td><code>int age = 18;</code></td><td>Whole numbers (no decimal)</td><td><code>%d</code></td></tr>
+      <tr><td>Float</td><td><code>float</code></td><td><code>float gpa = 3.75;</code></td><td>Numbers with decimal point</td><td><code>%f</code></td></tr>
+      <tr><td>Character</td><td><code>char</code></td><td><code>char grade = 'A';</code></td><td>A single character (in single quotes)</td><td><code>%c</code></td></tr>
+      <tr><td>Double</td><td><code>double</code></td><td><code>double pi = 3.14159265;</code></td><td>High-precision decimal (more accurate than float)</td><td><code>%lf</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Type Modifiers — Adjusting the Range</h3>
+  <table class="op-table">
+    <thead><tr><th>Modifier</th><th>Used with</th><th>Effect</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td><code>short</code></td><td>int</td><td>Smaller range, less memory</td><td><code>short int x;</code></td></tr>
+      <tr><td><code>long</code></td><td>int, double</td><td>Larger range</td><td><code>long int big = 1000000;</code></td></tr>
+      <tr><td><code>unsigned</code></td><td>int, char</td><td>Positive values only (doubles the max range)</td><td><code>unsigned int score;</code></td></tr>
+      <tr><td><code>signed</code></td><td>int, char</td><td>Can hold negatives (default behaviour)</td><td><code>signed int temp;</code></td></tr>
+    </tbody>
+  </table>
+
+  <div class="code-block"><pre><span class="c">// From your textbook — real declarations</span>
+<span class="k">int</span> X, L, M;          <span class="c">// 3 integers declared on one line</span>
+<span class="k">char</span> J;               <span class="c">// single character variable</span>
+<span class="k">char</span> G;               <span class="c">// another character</span>
+<span class="k">const float</span> GCT = .165; <span class="c">// CONSTANT — value cannot change!</span>
+
+X = 3;
+J = <span class="s">'H'</span>;             <span class="c">// characters use single quotes</span>
+L = X + 3;           <span class="c">// L = 6</span>
+M = X - 3;           <span class="c">// M = 0</span></pre></div>
+
+  <h3>Constants — Values That Never Change</h3>
+  <div class="infobox blue">
+    <h4>Syntax: <code>const datatype NAME = value;</code></h4>
+    <p>Use <code>const</code> when a value should never be modified after it is set. Common examples: pi (3.14159), tax rates, conversion factors. Convention: name constants in ALL CAPS so they are obvious.</p>
+    <div class="code-block"><pre><span class="k">const float</span> PI = 3.14159;
+<span class="k">const int</span> PASSING_GRADE = 50;
+<span class="k">const float</span> GCT = 0.165;   <span class="c">// St. Kitts General Consumption Tax!</span></pre></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>📡 Input and Output (I/O) in C</h2>
+  <p>Almost every program needs to <strong>display output</strong> to the user and <strong>accept input</strong> from the keyboard. In C, we use <code>printf</code> and <code>scanf</code> for this — both live inside <code>stdio.h</code>.</p>
+
+  <h3>printf — Displaying Output</h3>
+  <div class="infobox green">
+    <h4>Syntax</h4>
+    <div class="code-block"><pre><span class="k">printf</span>(<span class="s">"text with %format_specifiers"</span>, variable1, variable2);</pre></div>
+  </div>
+
+  <h3>Format Specifiers — Telling printf What Type to Print</h3>
+  <table class="op-table">
+    <thead><tr><th>Specifier</th><th>Data Type</th><th>Example</th><th>Output</th></tr></thead>
+    <tbody>
+      <tr><td><code>%d</code></td><td>int</td><td><code>printf("%d", 42);</code></td><td>42</td></tr>
+      <tr><td><code>%f</code></td><td>float/double</td><td><code>printf("%f", 3.14);</code></td><td>3.140000</td></tr>
+      <tr><td><code>%c</code></td><td>char</td><td><code>printf("%c", 'A');</code></td><td>A</td></tr>
+      <tr><td><code>%s</code></td><td>string</td><td><code>printf("%s", "Hello");</code></td><td>Hello</td></tr>
+      <tr><td><code>%ld</code></td><td>long int</td><td><code>printf("%ld", 999999L);</code></td><td>999999</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Escape Sequences — Special Characters Inside Strings</h3>
+  <table class="op-table">
+    <thead><tr><th>Sequence</th><th>Meaning</th><th>Effect</th></tr></thead>
+    <tbody>
+      <tr><td><code>\n</code></td><td>New line</td><td>Cursor moves to next line</td></tr>
+      <tr><td><code>\t</code></td><td>Tab</td><td>Inserts a horizontal tab</td></tr>
+      <tr><td><code>\\</code></td><td>Backslash</td><td>Prints a literal backslash</td></tr>
+      <tr><td><code>\"</code></td><td>Double quote</td><td>Prints a " inside a string</td></tr>
+    </tbody>
+  </table>
+
+  <h3>scanf — Accepting Input</h3>
+  <div class="infobox orange">
+    <h4>Syntax — Note the <code>&</code> (ampersand)!</h4>
+    <div class="code-block"><pre><span class="k">scanf</span>(<span class="s">"%format_specifier"</span>, &variableName);</pre></div>
+    <p>The <code>&</code> means "the memory address of" — it tells scanf exactly WHERE in memory to store the value the user types. <strong>Forgetting the <code>&</code> is the #2 most common beginner error!</strong></p>
+  </div>
+
+  <div class="code-block"><pre><span class="k">#include</span> <span class="s">&lt;stdio.h&gt;</span>
+<span class="k">int</span> main() {
+    <span class="k">int</span> age;
+    <span class="k">float</span> height;
+    <span class="k">char</span> initial;
+
+    <span class="k">printf</span>(<span class="s">"Enter your age: "</span>);
+    <span class="k">scanf</span>(<span class="s">"%d"</span>, &age);           <span class="c">// &age = store here</span>
+
+    <span class="k">printf</span>(<span class="s">"Enter your height (m): "</span>);
+    <span class="k">scanf</span>(<span class="s">"%f"</span>, &height);
+
+    <span class="k">printf</span>(<span class="s">"Enter your first initial: "</span>);
+    <span class="k">scanf</span>(<span class="s">"%c"</span>, &initial);        <span class="c">// for char, no space before %c</span>
+
+    <span class="k">printf</span>(<span class="s">"Hello %c! You are %d years old and %.2f m tall.\n"</span>,
+            initial, age, height);
+    <span class="k">return</span> 0;
+}</pre></div>
+
+  <div class="infobox yellow">
+    <h4>🎮 What does <code>%.2f</code> mean?</h4>
+    <p>The <code>.2</code> tells printf to show exactly 2 decimal places. So <code>1.75000</code> becomes <code>1.75</code>. You can use <code>%.1f</code>, <code>%.3f</code>, etc. Super useful for displaying money, scores, and measurements!</p>
+  </div>
+</div>
+
+<div class="card">
+  <h2>📜 Keywords and Naming Rules</h2>
+  <p>C has a set of <strong>reserved keywords</strong> — words with special meaning to the compiler. You cannot use these as variable names!</p>
+
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin:16px 0;">
+    <span class="tag tag-orange">auto</span><span class="tag tag-orange">break</span><span class="tag tag-orange">case</span><span class="tag tag-orange">char</span><span class="tag tag-orange">const</span><span class="tag tag-orange">continue</span><span class="tag tag-orange">default</span><span class="tag tag-orange">do</span><span class="tag tag-orange">double</span><span class="tag tag-orange">else</span><span class="tag tag-orange">enum</span><span class="tag tag-orange">extern</span><span class="tag tag-orange">float</span><span class="tag tag-orange">for</span><span class="tag tag-orange">goto</span><span class="tag tag-orange">if</span><span class="tag tag-orange">int</span><span class="tag tag-orange">long</span><span class="tag tag-orange">register</span><span class="tag tag-orange">return</span><span class="tag tag-orange">short</span><span class="tag tag-orange">signed</span><span class="tag tag-orange">sizeof</span><span class="tag tag-orange">static</span><span class="tag tag-orange">struct</span><span class="tag tag-orange">switch</span><span class="tag tag-orange">typedef</span><span class="tag tag-orange">union</span><span class="tag tag-orange">unsigned</span><span class="tag tag-orange">void</span><span class="tag tag-orange">volatile</span><span class="tag tag-orange">while</span>
+  </div>
+
+  <h3>Variable Naming Rules</h3>
+  <table class="op-table">
+    <thead><tr><th>Rule</th><th>Valid ✅</th><th>Invalid ❌</th></tr></thead>
+    <tbody>
+      <tr><td>Start with a letter or underscore</td><td><code>age</code>, <code>_score</code></td><td><code>1age</code>, <code>99lives</code></td></tr>
+      <tr><td>Can contain letters, digits, underscore</td><td><code>player1</code>, <code>high_score</code></td><td><code>high-score</code>, <code>high score</code></td></tr>
+      <tr><td>Case sensitive</td><td><code>age</code> ≠ <code>Age</code> ≠ <code>AGE</code></td><td>—</td></tr>
+      <tr><td>No spaces allowed</td><td><code>firstName</code></td><td><code>first name</code></td></tr>
+      <tr><td>Cannot be a keyword</td><td><code>myInt</code></td><td><code>int</code>, <code>float</code></td></tr>
+    </tbody>
+  </table>
+
+  <div class="infobox blue">
+    <h4>💡 Naming Conventions (Best Practice)</h4>
+    <p>While C only enforces the rules above, professional programmers follow conventions to keep code readable:</p>
+    <ul>
+      <li><strong>camelCase</strong> for variables: <code>playerScore</code>, <code>totalMarks</code></li>
+      <li><strong>ALL_CAPS</strong> for constants: <code>MAX_SIZE</code>, <code>GCT_RATE</code></li>
+      <li><strong>Descriptive names:</strong> <code>age</code> is better than <code>a</code></li>
+    </ul>
+  </div>
+</div>
+
+<div class="card">
+  <h2>🔑 Syntax vs Semantics</h2>
+  <p>Two types of errors you will encounter in C. Understanding the difference will save you hours of debugging!</p>
+
+  <div class="compare-grid">
+    <div class="compare-card for-card">
+      <h4>📐 Syntax Error</h4>
+      <p style="color:#c0d4ee;font-size:.95rem;">Breaking the grammatical RULES of C. The compiler catches these before your program runs — it won't even compile.</p>
+      <div class="code-block" style="font-size:.82rem;"><pre><span class="n">// Missing semicolon</span>
+<span class="k">int</span> age = 18         <span class="n">// ❌ error!</span>
+
+<span class="n">// Wrong brackets</span>
+<span class="k">printf</span>(<span class="s">"Hello"</span>       <span class="n">// ❌ missing )</span>
+
+<span class="n">// Undeclared variable</span>
+score = 90;          <span class="n">// ❌ never declared</span></pre></div>
+    </div>
+    <div class="compare-card while-card">
+      <h4>🧠 Semantic Error</h4>
+      <p style="color:#c0d4ee;font-size:.95rem;">The code is grammatically correct (compiles!) but the MEANING or LOGIC is wrong. These are trickier — you find them by testing.</p>
+      <div class="code-block" style="font-size:.82rem;"><pre><span class="n">// Wrong formula — divides 2 numbers</span>
+<span class="n">// instead of averaging 3</span>
+avg = (a + b) / 2;  <span class="n">// should be / 3</span>
+
+<span class="n">// Assignment instead of comparison</span>
+<span class="k">if</span> (x = 5)          <span class="n">// should be ==</span></pre></div>
+    </div>
+  </div>
+
+  <div class="infobox purple">
+    <h4>🎮 The Minecraft Analogy</h4>
+    <p><strong>Syntax error</strong> = trying to place a block in mid-air with no support — the game (compiler) won't let you do it at all.<br>
+    <strong>Semantic error</strong> = building a house with the door on the ceiling — it compiles (builds) fine but the logic makes no sense when you try to use it!</p>
+  </div>
+</div>
+
+<div class="card">
+  <h2>🧪 Your First Complete C Program</h2>
+  <p>Put it all together! Here's a properly structured program applying everything from this introduction. Read every comment carefully.</p>
+
+  <div class="code-block"><pre><span class="c">/* Program: Student Profile
+   Author: CFBC CAPE Computer Science
+   Description: Accepts student details and displays them */</span>
+
+<span class="k">#include</span> <span class="s">&lt;stdio.h&gt;</span>
+
+<span class="k">int</span> main() {
+    <span class="c">// ── Variable Declarations ──</span>
+    <span class="k">int</span>   age;
+    <span class="k">float</span> gpa;
+    <span class="k">char</span>  grade;
+    <span class="k">const float</span> PASSING_GPA = 2.0;    <span class="c">// constant</span>
+
+    <span class="c">// ── Accept Input ──</span>
+    <span class="k">printf</span>(<span class="s">"Enter your age: "</span>);
+    <span class="k">scanf</span>(<span class="s">"%d"</span>, &age);
+
+    <span class="k">printf</span>(<span class="s">"Enter your GPA (e.g. 3.5): "</span>);
+    <span class="k">scanf</span>(<span class="s">"%f"</span>, &gpa);
+
+    <span class="k">printf</span>(<span class="s">"Enter your grade (A/B/C/D/F): "</span>);
+    <span class="k">scanf</span>(<span class="s">" %c"</span>, &grade);   <span class="c">// space before %c clears buffer</span>
+
+    <span class="c">// ── Display Output ──</span>
+    <span class="k">printf</span>(<span class="s">"\n=== Student Profile ===\n"</span>);
+    <span class="k">printf</span>(<span class="s">"Age   : %d years\n"</span>, age);
+    <span class="k">printf</span>(<span class="s">"GPA   : %.2f\n"</span>, gpa);
+    <span class="k">printf</span>(<span class="s">"Grade : %c\n"</span>, grade);
+
+    <span class="k">if</span> (gpa >= PASSING_GPA) {
+        <span class="k">printf</span>(<span class="s">"Status: PASSING 🎉\n"</span>);
+    } <span class="k">else</span> {
+        <span class="k">printf</span>(<span class="s">"Status: Needs Improvement\n"</span>);
+    }
+
+    <span class="k">return</span> 0;
+}</pre></div>
+
+  <div class="infobox green">
+    <h4>✅ Everything in this program you now know:</h4>
+    <ul>
+      <li>Comment block at the top ✓</li>
+      <li><code>#include &lt;stdio.h&gt;</code> header ✓</li>
+      <li><code>int main()</code> with opening and closing <code>{ }</code> ✓</li>
+      <li>Variables declared at the top of main ✓</li>
+      <li>A <code>const</code> for a value that won't change ✓</li>
+      <li><code>printf</code> with correct format specifiers ✓</li>
+      <li><code>scanf</code> with <code>&</code> before variable names ✓</li>
+      <li><code>return 0;</code> at the end ✓</li>
+    </ul>
+  </div>
+
+  <div class="callout">
+    <div class="label">🚀 Ready for the Next Step?</div>
+    <p>Now that you know the structure, environment, and rules of C, you're ready to learn <strong>Operators</strong>! Click <strong>"⚡ Operators"</strong> in the tab bar above to continue your journey.</p>
+    <div style="margin-top:15px;">
+      <button class="btn btn-submit" onclick="document.querySelector('[onclick*=operators]').click()">Go to Operators ⚡</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== OPERATORS ===== -->
+<div id="operators" class="section">
+<div class="card">
+  <h2>⚡ Operators in C</h2>
+  <p>An <strong>operator</strong> tells the compiler to perform a specific mathematical or logical operation on variable data. There are several categories — let's master them one by one!</p>
+
+  <h3>➕ Arithmetic Operators</h3>
+  <table class="op-table">
+    <thead><tr><th>Operator</th><th>Name</th><th>Example (A=30, B=10)</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td><code>+</code></td><td>Addition</td><td><code>A + B</code></td><td>40</td></tr>
+      <tr><td><code>-</code></td><td>Subtraction</td><td><code>A - B</code></td><td>20</td></tr>
+      <tr><td><code>*</code></td><td>Multiplication</td><td><code>A * B</code></td><td>300</td></tr>
+      <tr><td><code>/</code></td><td>Division</td><td><code>A / B</code></td><td>3</td></tr>
+      <tr><td><code>%</code></td><td>Modulus (remainder)</td><td><code>A % B</code></td><td>0</td></tr>
+    </tbody>
+  </table>
+
+  <div class="infobox orange">
+    <h4>🎮 Modulus is EVERYWHERE in gaming!</h4>
+    <p>In Minecraft, when blocks wrap around a chunk boundary, modulus handles the position rollover. In Fortnite's circle calculations, modulus helps keep players within map bounds. <code>player_pos % map_size</code> keeps you on the map! 🗺️</p>
+  </div>
+
+  <h3>📝 Assignment Operators — The Critical Ones!</h3>
+  <p>This is one of the most important concepts. Pay very close attention to the difference between <strong>simple assignment</strong> and <strong>compound assignment</strong>!</p>
+
+  <div class="infobox blue">
+    <h4>The Golden Rule: <code>C += A</code> means EXACTLY the same as <code>C = C + A</code></h4>
+    <p>The compound operators are shortcuts — they always operate on the variable on the LEFT side of the <code>=</code>.</p>
+  </div>
+
+  <table class="op-table">
+    <thead><tr><th>Shortcut</th><th>Means Exactly</th><th>Example (C=10, A=5)</th><th>C becomes</th></tr></thead>
+    <tbody>
+      <tr><td><code>=</code></td><td>Simple assign</td><td><code>C = A</code></td><td>5</td></tr>
+      <tr><td><code>+=</code></td><td><code>C = C + A</code></td><td><code>C += A</code></td><td>15</td></tr>
+      <tr><td><code>-=</code></td><td><code>C = C - A</code></td><td><code>C -= A</code></td><td>5</td></tr>
+      <tr><td><code>*=</code></td><td><code>C = C * A</code></td><td><code>C *= A</code></td><td>50</td></tr>
+      <tr><td><code>/=</code></td><td><code>C = C / A</code></td><td><code>C /= A</code></td><td>2</td></tr>
+      <tr><td><code>%=</code></td><td><code>C = C % A</code></td><td><code>C %= A</code></td><td>0</td></tr>
+    </tbody>
+  </table>
+
+  <h3>🔢 Increment / Decrement Operators</h3>
+  <p>These add or subtract 1 from a variable. But the ORDER matters!</p>
+  <table class="op-table">
+    <thead><tr><th>Type</th><th>Operator</th><th>Effect</th><th>Key Difference</th></tr></thead>
+    <tbody>
+      <tr><td>Pre-increment</td><td><code>++C</code></td><td>C becomes C+1</td><td>Increments FIRST, then uses value</td></tr>
+      <tr><td>Post-increment</td><td><code>C++</code></td><td>Uses C, then C becomes C+1</td><td>Uses value FIRST, then increments</td></tr>
+      <tr><td>Pre-decrement</td><td><code>--C</code></td><td>C becomes C-1</td><td>Decrements FIRST</td></tr>
+      <tr><td>Post-decrement</td><td><code>C--</code></td><td>Uses C, then C becomes C-1</td><td>Uses value FIRST</td></tr>
+    </tbody>
+  </table>
+
+  <div class="code-block"><pre><span class="c">// From your textbook — int a=20, b=10, c=3.5, d=1000.5</span>
+<span class="k">printf</span>(<span class="s">"%d\n"</span>, ++a);   <span class="c">// PRE: a becomes 21 THEN prints → 21</span>
+<span class="k">printf</span>(<span class="s">"%d\n"</span>, b--);   <span class="c">// POST: prints 10 THEN b becomes 9</span>
+<span class="k">printf</span>(<span class="s">"%f\n"</span>, ++c);   <span class="c">// PRE: c becomes 4.5 THEN prints → 4.5</span>
+<span class="k">printf</span>(<span class="s">"%f\n"</span>, --d);   <span class="c">// PRE: d becomes 999.5 THEN prints → 999.5</span></pre></div>
+
+  <h3>🔗 Relational Operators</h3>
+  <table class="op-table">
+    <thead><tr><th>Operator</th><th>Meaning</th><th>Example (A=5, B=3)</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td><code>==</code></td><td>Equal to</td><td><code>A == B</code></td><td>false (0)</td></tr>
+      <tr><td><code>!=</code></td><td>Not equal</td><td><code>A != B</code></td><td>true (1)</td></tr>
+      <tr><td><code>&gt;</code></td><td>Greater than</td><td><code>A &gt; B</code></td><td>true (1)</td></tr>
+      <tr><td><code>&lt;</code></td><td>Less than</td><td><code>A &lt; B</code></td><td>false (0)</td></tr>
+      <tr><td><code>&gt;=</code></td><td>Greater or equal</td><td><code>A &gt;= B</code></td><td>true (1)</td></tr>
+      <tr><td><code>&lt;=</code></td><td>Less or equal</td><td><code>A &lt;= B</code></td><td>false (0)</td></tr>
+    </tbody>
+  </table>
+
+  <h3>🧠 Logical Operators</h3>
+  <table class="op-table">
+    <thead><tr><th>Operator</th><th>Name</th><th>Rule</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td><code>&amp;&amp;</code></td><td>Logical AND</td><td>True ONLY if BOTH are true</td><td><code>(A&gt;0 &amp;&amp; B&gt;0)</code></td></tr>
+      <tr><td><code>||</code></td><td>Logical OR</td><td>True if ANY ONE is true</td><td><code>(A&gt;0 || B&gt;0)</code></td></tr>
+      <tr><td><code>!</code></td><td>Logical NOT</td><td>Reverses the truth</td><td><code>!(A==B)</code></td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-divider"></div>
+
+  <!-- LAB 1 -->
+  <div class="lab-box">
+    <div class="lab-badge">🧪 LAB 1</div>
+    <h4>Assignment Operators in Action</h4>
+    <p>Given: <code>int C = 20, A = 5;</code> — trace through each operation in order, using the result from the previous line each time!</p>
+    <ul class="task-list">
+      <li>After <code>C += A</code> — what is C?</li>
+      <li>After <code>C -= A</code> (using new C) — what is C?</li>
+      <li>After <code>C *= A</code> (using new C) — what is C?</li>
+      <li>After <code>C /= A</code> (using new C) — what is C?</li>
+      <li>After <code>C %= 3</code> (using new C) — what is C?</li>
+    </ul>
+    <div class="btn-row">
+      <button class="btn btn-hint" onclick="toggleBox('hint1')">💡 Reveal Hint</button>
+      <button class="btn btn-answer" onclick="toggleBox('ans1')">✅ Show Answer</button>
+    </div>
+    <div class="hint-box" id="hint1">
+      <strong>Think step by step!</strong> Each operator modifies C, and the NEXT operation starts with the new value of C. Remember: <code>C += A</code> means <code>C = C + A</code>. Start: C=20, A=5. What does 20+5 give you? Now use THAT as C for the next line...
+    </div>
+    <div class="answer-box" id="ans1">
+      <div class="code-block"><pre>C = 20, A = 5
+
+C += A  →  C = 20 + 5  =  25
+C -= A  →  C = 25 - 5  =  20
+C *= A  →  C = 20 * 5  =  100
+C /= A  →  C = 100 / 5 =  20
+C %= 3  →  C = 20 % 3  =  2   ← remainder when 20 divided by 3</pre></div>
+      <p>🎯 Final value of C = <strong style="color:var(--neon)">2</strong></p>
+    </div>
+  </div>
+
+  <!-- LAB 2 -->
+  <div class="lab-box">
+    <div class="lab-badge">🧪 LAB 2</div>
+    <h4>Pre vs Post Increment Challenge</h4>
+    <p>Given <code>int x = 6, y = 7;</code> — predict the output of these printf statements. (Hint: 6-7 might mean something! 👀)</p>
+    <div class="code-block"><pre><span class="k">printf</span>(<span class="s">"%d\n"</span>, x++);  <span class="c">// Line 1</span>
+<span class="k">printf</span>(<span class="s">"%d\n"</span>, x);    <span class="c">// Line 2</span>
+<span class="k">printf</span>(<span class="s">"%d\n"</span>, ++y);  <span class="c">// Line 3</span>
+<span class="k">printf</span>(<span class="s">"%d\n"</span>, y);    <span class="c">// Line 4</span></pre></div>
+    <div class="btn-row">
+      <button class="btn btn-hint" onclick="toggleBox('hint2')">💡 Reveal Hint</button>
+      <button class="btn btn-answer" onclick="toggleBoxEgg('ans2','egg_67')">✅ Show Answer</button>
+    </div>
+    <div class="hint-box" id="hint2">
+      <strong>Key question:</strong> Does the <code>++</code> appear BEFORE or AFTER the variable? <br>• <code>x++</code> (POST): print first, increment after<br>• <code>++y</code> (PRE): increment first, then print<br>Remember, after Line 1 runs, x has changed — what is it for Line 2?
+    </div>
+    <div class="answer-box" id="ans2">
+      <div class="code-block"><pre>x=6, y=7
+
+Line 1: printf(x++) → prints 6, THEN x becomes 7
+Line 2: printf(x)   → prints 7  (x was already incremented)
+Line 3: printf(++y) → y becomes 8 FIRST, then prints 8
+Line 4: printf(y)   → prints 8  (y is still 8)</pre></div>
+      <p>Output: <strong style="color:var(--neon)">6, 7, 8, 8</strong></p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== BRANCHING ===== -->
+<div id="branching" class="section">
+<div class="card">
+  <h2>🔀 Conditional Branching (if / else)</h2>
+  <p>Programs often need to make decisions. The <code>if</code> statement lets your program take different paths based on conditions.</p>
+
+  <h3>Syntax</h3>
+  <div class="code-block"><pre><span class="k">if</span> (condition) {
+    <span class="c">// code runs if condition is TRUE</span>
+} <span class="k">else</span> {
+    <span class="c">// code runs if condition is FALSE</span>
+}</pre></div>
+
+  <h3>Nested if / else-if</h3>
+  <p>When you have more than two options, chain them with <code>else if</code>:</p>
+  <div class="code-block"><pre><span class="k">if</span> (condition1) {
+    <span class="c">// code part 1</span>
+} <span class="k">else if</span> (condition2) {
+    <span class="c">// code part 2</span>
+} <span class="k">else if</span> (conditionN) {
+    <span class="c">// code part N</span>
+} <span class="k">else</span> {
+    <span class="c">// none of the above</span>
+}</pre></div>
+
+  <div class="infobox blue">
+    <h4>📱 Real-World Example: Fortnite Storm Damage!</h4>
+    <div class="code-block"><pre><span class="k">if</span> (player_hp > 75) {
+    <span class="k">printf</span>(<span class="s">"You are in the safe zone!\n"</span>);
+} <span class="k">else if</span> (player_hp > 25) {
+    <span class="k">printf</span>(<span class="s">"Warning: storm damage detected!\n"</span>);
+} <span class="k">else</span> {
+    <span class="k">printf</span>(<span class="s">"CRITICAL: Get to safety NOW!\n"</span>);
+}</pre></div>
+  </div>
+
+  <h3>From your textbook — Discount Program</h3>
+  <div class="code-block"><pre><span class="k">#include</span> <span class="s">&lt;stdio.h&gt;</span>
+<span class="k">int</span> main() {
+    <span class="k">int</span> price;
+    <span class="k">char</span> discount;
+    <span class="k">printf</span>(<span class="s">"Please enter the price of the item: "</span>);
+    <span class="k">scanf</span>(<span class="s">"%d"</span>, &price);
+    <span class="k">if</span> (price > 100) {
+        discount = <span class="s">'y'</span>;
+        <span class="k">printf</span>(<span class="s">"You have earned a discount!\n"</span>);
+    } <span class="k">else</span> {
+        discount = <span class="s">'n'</span>;
+        <span class="k">printf</span>(<span class="s">"No discount\n"</span>);
+    }
+    <span class="k">return</span> 0;
+}</pre></div>
+
+  <div class="section-divider"></div>
+
+  <!-- LAB 3 -->
+  <div class="lab-box">
+    <div class="lab-badge">🧪 LAB 3</div>
+    <h4>Grade Classifier</h4>
+    <p>Write a C program that accepts a student's exam score (0–100) and prints their grade AND a motivational message:</p>
+    <ul class="task-list">
+      <li>90–100 → Grade A → "Outstanding! Rockstar coder! 🌟"</li>
+      <li>75–89 → Grade B → "Great work, keep it up!"</li>
+      <li>60–74 → Grade C → "You passed! Keep pushing!"</li>
+      <li>50–59 → Grade D → "Borderline — review and retry!"</li>
+      <li>Below 50 → Grade F → "Don't give up — try again!"</li>
+    </ul>
+    <div class="btn-row">
+      <button class="btn btn-hint" onclick="toggleBox('hint3a')">💡 Hint 1: Structure</button>
+      <button class="btn btn-hint" onclick="toggleBox('hint3b')">💡 Hint 2: Condition</button>
+      <button class="btn btn-answer" onclick="toggleBox('ans3')">✅ Show Answer</button>
+    </div>
+    <div class="hint-box" id="hint3a">
+      You need: <code>#include &lt;stdio.h&gt;</code>, declare <code>int score</code>, use <code>scanf</code> to get input, then a chain of <code>if / else if / else</code> blocks. How many <code>else if</code> blocks do you need for 5 grade categories?
+    </div>
+    <div class="hint-box" id="hint3b">
+      For "90–100", the condition is: <code>(score &gt;= 90)</code> — you don't need to also check <code>&lt;= 100</code> because if the score was above 100, it would be caught as invalid earlier. Each <code>else if</code> only runs if the conditions above it were false!
+    </div>
+    <div class="answer-box" id="ans3">
+      <div class="code-block"><pre><span class="k">#include</span> <span class="s">&lt;stdio.h&gt;</span>
+<span class="k">int</span> main() {
+    <span class="k">int</span> score;
+    <span class="k">printf</span>(<span class="s">"Enter exam score: "</span>);
+    <span class="k">scanf</span>(<span class="s">"%d"</span>, &score);
+
+    <span class="k">if</span> (score >= 90) {
+        <span class="k">printf</span>(<span class="s">"Grade A - Outstanding! Rockstar coder!\n"</span>);
+    } <span class="k">else if</span> (score >= 75) {
+        <span class="k">printf</span>(<span class="s">"Grade B - Great work, keep it up!\n"</span>);
+    } <span class="k">else if</span> (score >= 60) {
+        <span class="k">printf</span>(<span class="s">"Grade C - You passed! Keep pushing!\n"</span>);
+    } <span class="k">else if</span> (score >= 50) {
+        <span class="k">printf</span>(<span class="s">"Grade D - Borderline, review and retry!\n"</span>);
+    } <span class="k">else</span> {
+        <span class="k">printf</span>(<span class="s">"Grade F - Don't give up, try again!\n"</span>);
+    }
+    <span class="k">return</span> 0;
+}</pre></div>
+      <p>💡 <strong>Why no upper bounds?</strong> Once C determines <code>score &gt;= 90</code> is false, the next <code>else if</code> already knows score is below 90. No need to write <code>score &gt;= 75 &amp;&amp; score &lt;= 89</code>!</p>
+    </div>
+  </div>
+
+  <!-- LAB 4 -->
+  <div class="lab-box">
+    <div class="lab-badge">🧪 LAB 4</div>
+    <h4>Roblox Level Access</h4>
+    <p>In a Roblox game, players need a minimum level to enter different zones. Write a program that accepts a player's level and an operator symbol (+, -, *) and determines if they can access each zone AND performs the operation:</p>
+    <ul class="task-list">
+      <li>Level 50+ → Can enter "Dragon's Lair" zone</li>
+      <li>Level 20–49 → "Forest Kingdom" zone</li>
+      <li>Level 1–19 → "Starter Village" only</li>
+      <li>Also accept two numbers and perform +, - or * based on user choice</li>
+    </ul>
+    <div class="btn-row">
+      <button class="btn btn-hint" onclick="toggleBox('hint4')">💡 Reveal Hint</button>
+      <button class="btn btn-answer" onclick="toggleBoxEgg('ans4','egg_roblox')">✅ Show Answer</button>
+    </div>
+    <div class="hint-box" id="hint4">
+      For the operator part: declare <code>char op;</code> and <code>int a, b, result;</code>. Use <code>scanf("%c", &op);</code> for the operator. Then use nested <code>if/else</code> to check which operator was entered. For level: use <code>else if</code> chaining.
+    </div>
+    <div class="answer-box" id="ans4">
+      <div class="code-block"><pre><span class="k">#include</span> <span class="s">&lt;stdio.h&gt;</span>
+<span class="k">int</span> main() {
+    <span class="k">int</span> level, a, b, result;
+    <span class="k">char</span> op;
+
+    <span class="k">printf</span>(<span class="s">"Enter your player level: "</span>);
+    <span class="k">scanf</span>(<span class="s">"%d"</span>, &level);
+
+    <span class="k">if</span> (level >= 50) {
+        <span class="k">printf</span>(<span class="s">"ACCESS GRANTED: Dragon's Lair!\n"</span>);
+    } <span class="k">else if</span> (level >= 20) {
+        <span class="k">printf</span>(<span class="s">"ACCESS GRANTED: Forest Kingdom!\n"</span>);
+    } <span class="k">else</span> {
+        <span class="k">printf</span>(<span class="s">"Starter Village only. Level up!\n"</span>);
+    }
+
+    <span class="k">printf</span>(<span class="s">"Enter: num1 operator num2: "</span>);
+    <span class="k">scanf</span>(<span class="s">"%d %c %d"</span>, &a, &op, &b);
+
+    <span class="k">if</span> (op == <span class="s">'+'</span>) result = a + b;
+    <span class="k">else if</span> (op == <span class="s">'-'</span>) result = a - b;
+    <span class="k">else if</span> (op == <span class="s">'*'</span>) result = a * b;
+    <span class="k">else</span> { <span class="k">printf</span>(<span class="s">"Unknown operator!\n"</span>); <span class="k">return</span> 1; }
+
+    <span class="k">printf</span>(<span class="s">"Result: %d\n"</span>, result);
+    <span class="k">return</span> 0;
+}</pre></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== SWITCH ===== -->
+<div id="switch" class="section">
+<div class="card">
+  <h2>🔄 Switch / Case Statement</h2>
+
+  <div class="callout">
+    <div class="label">🤔 WHY SWITCH?</div>
+    <p>When you have many <code>else if</code> branches checking the SAME variable, code becomes hard to read. <code>switch</code> is cleaner and the compiler optimises it to run faster!</p>
+  </div>
+
+  <h3>Step 1: The Problem Without Switch</h3>
+  <p>Imagine a Minecraft shop menu with 4 items. Using if/else:</p>
+  <div class="code-block"><pre><span class="c">// WITHOUT switch — gets messy fast!</span>
+<span class="k">if</span> (choice == 1) {
+    <span class="k">printf</span>(<span class="s">"You bought: Sword\n"</span>);
+} <span class="k">else if</span> (choice == 2) {
+    <span class="k">printf</span>(<span class="s">"You bought: Shield\n"</span>);
+} <span class="k">else if</span> (choice == 3) {
+    <span class="k">printf</span>(<span class="s">"You bought: Potion\n"</span>);
+} <span class="k">else if</span> (choice == 4) {
+    <span class="k">printf</span>(<span class="s">"You bought: Armor\n"</span>);
+} <span class="k">else</span> {
+    <span class="k">printf</span>(<span class="s">"Invalid choice!\n"</span>);
+}</pre></div>
+
+  <h3>Step 2: Refactored WITH Switch</h3>
+  <div class="code-block"><pre><span class="c">// WITH switch — clean, fast, professional!</span>
+<span class="k">switch</span> (choice) {
+    <span class="k">case</span> 1:
+        <span class="k">printf</span>(<span class="s">"You bought: Sword\n"</span>);
+        <span class="k">break</span>;
+    <span class="k">case</span> 2:
+        <span class="k">printf</span>(<span class="s">"You bought: Shield\n"</span>);
+        <span class="k">break</span>;
+    <span class="k">case</span> 3:
+        <span class="k">printf</span>(<span class="s">"You bought: Potion\n"</span>);
+        <span class="k">break</span>;
+    <span class="k">case</span> 4:
+        <span class="k">printf</span>(<span class="s">"You bought: Armor\n"</span>);
+        <span class="k">break</span>;
+    <span class="k">default</span>:
+        <span class="k">printf</span>(<span class="s">"Invalid choice!\n"</span>);
+}</pre></div>
+
+  <div class="infobox red">
+    <h4>⚠️ NEVER forget <code>break</code>!</h4>
+    <p>Without <code>break</code>, execution "falls through" to the next case automatically! This is a common beginner bug. Always end each case with <code>break;</code> unless you intentionally want fall-through.</p>
+  </div>
+
+  <h3>Switch Rules</h3>
+  <ul>
+    <li>The variable in <code>switch()</code> must be an integer or character</li>
+    <li>Each <code>case</code> is checked for equality — no ranges allowed</li>
+    <li><code>default</code> runs if no case matches (like the final <code>else</code>)</li>
+    <li><code>break</code> exits the switch after a match</li>
+    <li>Case statements execute faster than long if-else chains</li>
+  </ul>
+
+  <h3>Textbook Example: Favourite Dessert</h3>
+  <div class="code-block"><pre><span class="k">#include</span> <span class="s">&lt;stdio.h&gt;</span>
+<span class="k">int</span> main() {
+    <span class="k">char</span> Choice;
+    <span class="k">printf</span>(<span class="s">"What is your favourite dessert? :\n"</span>);
+    <span class="k">printf</span>(<span class="s">"a) Cheese cake\n"</span>);
+    <span class="k">printf</span>(<span class="s">"b) Ice Cream\n"</span>);
+    <span class="k">printf</span>(<span class="s">"c) Bread Pudding\n"</span>);
+    <span class="k">scanf</span>(<span class="s">"%c"</span>, &Choice);
+    <span class="k">switch</span>(Choice) {
+        <span class="k">case</span> <span class="s">'a'</span>:
+            <span class="k">printf</span>(<span class="s">"Take a slice of the cheese cake\n"</span>);
+            <span class="k">break</span>;
+        <span class="k">case</span> <span class="s">'b'</span>:
+            <span class="k">printf</span>(<span class="s">"Have a serving of Ice Cream\n"</span>);
+            <span class="k">break</span>;
+        <span class="k">case</span> <span class="s">'c'</span>:
+            <span class="k">printf</span>(<span class="s">"Lots of pudding for you!\n"</span>);
+            <span class="k">break</span>;
+        <span class="k">default</span>:
+            <span class="k">printf</span>(<span class="s">"No desert for you today!\n"</span>);
+    }
+    <span class="k">return</span> 0;
+}</pre></div>
+
+  <div class="section-divider"></div>
+
+  <!-- LAB 5: Write WITHOUT then refactor -->
+  <div class="lab-box">
+    <div class="lab-badge">🧪 LAB 5 — Part A</div>
+    <h4>First: Write it WITHOUT switch</h4>
+    <p>A simple calculator accepts two integers and an operator (+, -, *, /, %). Write the program using ONLY if/else chains first.</p>
+    <ul class="task-list">
+      <li>Declare: <code>int a, b, result; char op;</code></li>
+      <li>Accept input with scanf</li>
+      <li>Use if/else to handle each operator</li>
+      <li>Handle division by zero!</li>
+    </ul>
+    <div class="btn-row">
+      <button class="btn btn-hint" onclick="toggleBox('hint5a')">💡 Hint</button>
+      <button class="btn btn-answer" onclick="toggleBox('ans5a')">✅ Show Part A Answer</button>
+    </div>
+    <div class="hint-box" id="hint5a">
+      Start with <code>#include &lt;stdio.h&gt;</code>. Use <code>scanf("%d %c %d", &a, &op, &b)</code> to read "5 + 3" in one go. Then check: <code>if (op == '+') { result = a + b; }</code> etc. For division, add: <code>if (b == 0) { printf("Cannot divide by zero!\n"); }</code>
+    </div>
+    <div class="answer-box" id="ans5a">
+      <div class="code-block"><pre><span class="k">#include</span> <span class="s">&lt;stdio.h&gt;</span>
+<span class="k">int</span> main() {
+    <span class="k">int</span> a, b, result;
+    <span class="k">char</span> op;
+    <span class="k">printf</span>(<span class="s">"Enter: num1 op num2 (e.g. 10 + 5): "</span>);
+    <span class="k">scanf</span>(<span class="s">"%d %c %d"</span>, &a, &op, &b);
+
+    <span class="k">if</span> (op == <span class="s">'+'</span>) {
+        result = a + b;
+        <span class="k">printf</span>(<span class="s">"Result: %d\n"</span>, result);
+    } <span class="k">else if</span> (op == <span class="s">'-'</span>) {
+        result = a - b;
+        <span class="k">printf</span>(<span class="s">"Result: %d\n"</span>, result);
+    } <span class="k">else if</span> (op == <span class="s">'*'</span>) {
+        result = a * b;
+        <span class="k">printf</span>(<span class="s">"Result: %d\n"</span>, result);
+    } <span class="k">else if</span> (op == <span class="s">'/'</span>) {
+        <span class="k">if</span> (b == 0) <span class="k">printf</span>(<span class="s">"Cannot divide by zero!\n"</span>);
+        <span class="k">else</span> <span class="k">printf</span>(<span class="s">"Result: %d\n"</span>, a / b);
+    } <span class="k">else if</span> (op == <span class="s">'%'</span>) {
+        <span class="k">if</span> (b == 0) <span class="k">printf</span>(<span class="s">"Cannot mod by zero!\n"</span>);
+        <span class="k">else</span> <span class="k">printf</span>(<span class="s">"Result: %d\n"</span>, a % b);
+    } <span class="k">else</span> {
+        <span class="k">printf</span>(<span class="s">"Invalid operator!\n"</span>);
+    }
+    <span class="k">return</span> 0;
+}</pre></div>
+    </div>
+  </div>
+
+  <div class="lab-box">
+    <div class="lab-badge">🧪 LAB 5 — Part B</div>
+    <h4>Now Refactor it WITH switch!</h4>
+    <p>Take your Part A solution and rewrite the if/else chains using <code>switch(op)</code>. The rest of the program stays the same!</p>
+    <ul class="task-list">
+      <li>Replace all if/else chains with a single switch block</li>
+      <li>Remember a case for each operator: '+', '-', '*', '/', '%'</li>
+      <li>Add a default for invalid operators</li>
+      <li>Notice how much CLEANER this looks!</li>
+    </ul>
+    <div class="btn-row">
+      <button class="btn btn-hint" onclick="toggleBox('hint5b')">💡 Hint</button>
+      <button class="btn btn-answer" onclick="toggleBoxEgg('ans5b','egg_minecraft')">✅ Show Answer</button>
+    </div>
+    <div class="hint-box" id="hint5b">
+      Start your switch: <code>switch(op) { case '+': ... break; case '-': ... break; }</code>. For char cases, put the character in single quotes. Notice you don't repeat <code>result = </code> on multiple lines — use it INSIDE each case. For division, you can still nest an <code>if(b==0)</code> inside the case!
+    </div>
+    <div class="answer-box" id="ans5b">
+      <div class="code-block"><pre><span class="k">#include</span> <span class="s">&lt;stdio.h&gt;</span>
+<span class="k">int</span> main() {
+    <span class="k">int</span> a, b;
+    <span class="k">char</span> op;
+    <span class="k">printf</span>(<span class="s">"Enter: num1 op num2 (e.g. 10 + 5): "</span>);
+    <span class="k">scanf</span>(<span class="s">"%d %c %d"</span>, &a, &op, &b);
+
+    <span class="k">switch</span>(op) {
+        <span class="k">case</span> <span class="s">'+'</span>:
+            <span class="k">printf</span>(<span class="s">"Result: %d\n"</span>, a + b);
+            <span class="k">break</span>;
+        <span class="k">case</span> <span class="s">'-'</span>:
+            <span class="k">printf</span>(<span class="s">"Result: %d\n"</span>, a - b);
+            <span class="k">break</span>;
+        <span class="k">case</span> <span class="s">'*'</span>:
+            <span class="k">printf</span>(<span class="s">"Result: %d\n"</span>, a * b);
+            <span class="k">break</span>;
+        <span class="k">case</span> <span class="s">'/'</span>:
+            <span class="k">if</span> (b == 0) <span class="k">printf</span>(<span class="s">"Cannot divide by zero!\n"</span>);
+            <span class="k">else</span> <span class="k">printf</span>(<span class="s">"Result: %d\n"</span>, a / b);
+            <span class="k">break</span>;
+        <span class="k">case</span> <span class="s">'%'</span>:
+            <span class="k">if</span> (b == 0) <span class="k">printf</span>(<span class="s">"Cannot mod by zero!\n"</span>);
+            <span class="k">else</span> <span class="k">printf</span>(<span class="s">"Result: %d\n"</span>, a % b);
+            <span class="k">break</span>;
+        <span class="k">default</span>:
+            <span class="k">printf</span>(<span class="s">"Invalid operator! Use + - * / %%\n"</span>);
+    }
+    <span class="k">return</span> 0;
+}</pre></div>
+      <p>🎯 <strong>Compare both versions!</strong> Notice the switch version is more readable and runs faster because the compiler builds a jump table instead of checking every condition.</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== FOR LOOP ===== -->
+<div id="forloop" class="section">
+<div class="card">
+  <h2>🔁 The For Loop</h2>
+  <p>Use a <code>for</code> loop when you know exactly how many times you want to repeat — you have a finite, countable number of iterations.</p>
+
+  <div class="infobox green">
+    <h4>Syntax: Three parts in ONE line</h4>
+    <div class="code-block"><pre><span class="k">for</span> (initialisation; condition; increment/decrement) {
+    <span class="c">// loop body — runs while condition is true</span>
+}</pre></div>
+    <p><strong>1. Initialisation:</strong> Set up the counter (<code>i = 0</code>) — runs ONCE at start<br>
+    <strong>2. Condition:</strong> Keep looping while this is true (<code>i &lt; 10</code>)<br>
+    <strong>3. Increment:</strong> Change counter each iteration (<code>i++</code>)</p>
+  </div>
+
+  <div class="compare-grid">
+    <div class="compare-card for-card">
+      <h4>🔁 For Loop Flow</h4>
+      <ol style="color:#c0d4ee;">
+        <li>Initialise counter</li>
+        <li>Check condition → FALSE? Exit</li>
+        <li>Execute loop body</li>
+        <li>Increment counter</li>
+        <li>Go back to step 2</li>
+      </ol>
+    </div>
+    <div class="compare-card" style="border-color:rgba(0,255,136,.2);">
+      <h4 style="color:var(--neon);">When to use For:</h4>
+      <ul style="color:#c0d4ee;">
+        <li>Printing multiplication tables</li>
+        <li>Counting from A to B</li>
+        <li>Processing fixed-size lists</li>
+        <li>Repeating exactly N times</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Textbook Example: Multiplication Table</h3>
+  <div class="code-block"><pre><span class="k">#include</span> <span class="s">&lt;stdio.h&gt;</span>
+<span class="k">int</span> main() {
+    <span class="k">int</span> a;
+    <span class="k">printf</span>(<span class="s">"Enter a number: "</span>);
+    <span class="k">scanf</span>(<span class="s">"%d"</span>, &a);
+    <span class="k">printf</span>(<span class="s">"Multiplication table:\n"</span>);
+    <span class="k">for</span> (<span class="k">int</span> i = 1; i <= 10; i++) {
+        <span class="k">printf</span>(<span class="s">"%d * %d = %d\n"</span>, a, i, a * i);
+    }
+    <span class="k">return</span> 0;
+}</pre></div>
+
+  <h3>🎯 Factorial with a For Loop</h3>
+  <p>Factorial of n (written n!) = n × (n-1) × (n-2) × ... × 1<br>
+  Example: <strong>5! = 5 × 4 × 3 × 2 × 1 = 120</strong></p>
+  <div class="code-block"><pre><span class="k">#include</span> <span class="s">&lt;stdio.h&gt;</span>
+<span class="k">int</span> main() {
+    <span class="k">int</span> num;
+    <span class="k">long int</span> fact = 1;
+    <span class="k">printf</span>(<span class="s">"Enter a number: "</span>);
+    <span class="k">scanf</span>(<span class="s">"%d"</span>, &num);
+
+    <span class="k">for</span> (<span class="k">int</span> i = 1; i <= num; i++) {
+        fact = fact * i;   <span class="c">// or: fact *= i;</span>
+    }
+
+    <span class="k">printf</span>(<span class="s">"Factorial of %d is %ld\n"</span>, num, fact);
+    <span class="k">return</span> 0;
+}</pre></div>
+
+  <div class="callout">
+    <div class="label">🕹️ Trace It Manually — n = 5</div>
+    <table class="op-table">
+      <thead><tr><th>i</th><th>fact = fact * i</th><th>fact value</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>1 * 1</td><td>1</td></tr>
+        <tr><td>2</td><td>1 * 2</td><td>2</td></tr>
+        <tr><td>3</td><td>2 * 3</td><td>6</td></tr>
+        <tr><td>4</td><td>6 * 4</td><td>24</td></tr>
+        <tr><td>5</td><td>24 * 5</td><td><strong style="color:var(--neon)">120 ✓</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- LAB 6 -->
+  <div class="lab-box">
+    <div class="lab-badge">🧪 LAB 6</div>
+    <h4>Fortnite Victory Royale Counter</h4>
+    <p>Write a program using a <code>for</code> loop that prints the XP a player earns each round. They earn <strong>base_xp * round_number</strong> XP each round. Accept the base_xp and number of rounds from the user.</p>
+    <ul class="task-list">
+      <li>Accept: base_xp (int) and num_rounds (int)</li>
+      <li>Loop from round 1 to num_rounds</li>
+      <li>Print: "Round X: You earned Y XP"</li>
+      <li>Print total XP at the end</li>
+    </ul>
+    <div class="btn-row">
+      <button class="btn btn-hint" onclick="toggleBox('hint6a')">💡 Hint 1</button>
+      <button class="btn btn-hint" onclick="toggleBox('hint6b')">💡 Hint 2: Total</button>
+      <button class="btn btn-answer" onclick="toggleBox('ans6')">✅ Show Answer</button>
+    </div>
+    <div class="hint-box" id="hint6a">
+      Your for loop: <code>for (int round = 1; round &lt;= num_rounds; round++)</code>. Inside, the XP for this round is <code>base_xp * round</code>. Use a variable like <code>int earned = base_xp * round;</code> then printf it.
+    </div>
+    <div class="hint-box" id="hint6b">
+      Declare <code>int total = 0;</code> BEFORE the loop. Inside the loop, add: <code>total += earned;</code>. After the loop ends, print total.
+    </div>
+    <div class="answer-box" id="ans6">
+      <div class="code-block"><pre><span class="k">#include</span> <span class="s">&lt;stdio.h&gt;</span>
+<span class="k">int</span> main() {
+    <span class="k">int</span> base_xp, num_rounds, earned, total = 0;
+    <span class="k">printf</span>(<span class="s">"Enter base XP per round: "</span>);
+    <span class="k">scanf</span>(<span class="s">"%d"</span>, &base_xp);
+    <span class="k">printf</span>(<span class="s">"Enter number of rounds: "</span>);
+    <span class="k">scanf</span>(<span class="s">"%d"</span>, &num_rounds);
+
+    <span class="k">for</span> (<span class="k">int</span> round = 1; round <= num_rounds; round++) {
+        earned = base_xp * round;
+        total += earned;
+        <span class="k">printf</span>(<span class="s">"Round %d: You earned %d XP\n"</span>, round, earned);
+    }
+
+    <span class="k">printf</span>(<span class="s">"\nTotal XP earned: %d\n"</span>, total);
+    <span class="k">return</span> 0;
+}</pre></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== WHILE LOOP ===== -->
+<div id="whileloop" class="section">
+<div class="card">
+  <h2>⏳ The While Loop</h2>
+  <p>Use a <code>while</code> loop when you DON'T know exactly how many iterations you need — the loop runs as long as a condition remains true.</p>
+
+  <div class="infobox orange">
+    <h4>Syntax — Simple but Powerful</h4>
+    <div class="code-block"><pre><span class="c">// Initialise counter BEFORE the loop</span>
+<span class="k">int</span> i = 0;
+
+<span class="k">while</span> (condition) {
+    <span class="c">// loop body</span>
+    i++;   <span class="c">// increment counter INSIDE loop (or you'll loop forever!)</span>
+}</pre></div>
+  </div>
+
+  <div class="compare-grid">
+    <div class="compare-card for-card">
+      <h4>🔁 For Loop</h4>
+      <p style="color:#c0d4ee;">All 3 parts in one line:<br><code style="font-family:'Share Tech Mono',monospace;">for(init; cond; incr)</code><br><br>Counter declared and managed IN the loop header.</p>
+    </div>
+    <div class="compare-card while-card">
+      <h4>⏳ While Loop</h4>
+      <p style="color:#c0d4ee;">Only condition in header:<br><code style="font-family:'Share Tech Mono',monospace;">while(cond)</code><br><br>You manage init and increment manually OUTSIDE/INSIDE loop.</p>
+    </div>
+  </div>
+
+  <div class="infobox yellow">
+    <h4>🎮 When to use which?</h4>
+    <ul>
+      <li><strong>for loop</strong> → You KNOW the count: "print 10 times", "loop through 5 items"</li>
+      <li><strong>while loop</strong> → You DON'T know the count: "keep asking until valid input", "keep running until player dies"</li>
+    </ul>
+  </div>
+
+  <h3>Do...While Loop</h3>
+  <p>A special variant — the body executes <strong>at least ONCE</strong> before checking the condition. Perfect for menus!</p>
+  <div class="code-block"><pre><span class="k">do</span> {
+    <span class="c">// body always runs at least once</span>
+} <span class="k">while</span> (condition);</pre></div>
+
+  <div class="section-divider"></div>
+
+  <h3>Textbook Shoe Shop — Do...While Example</h3>
+  <div class="code-block"><pre><span class="k">#include</span> <span class="s">&lt;stdio.h&gt;</span>
+<span class="k">int</span> main() {
+    <span class="k">int</span> meal;
+    <span class="k">char</span> ch;
+    <span class="k">do</span> {
+        <span class="k">printf</span>(<span class="s">"Welcome to the shoe shop. Please select your brand:\n"</span>);
+        <span class="k">printf</span>(<span class="s">"1. Liberty\n2. Nike\n3. Reebok\n4. Adidas\n"</span>);
+        <span class="k">printf</span>(<span class="s">"Please enter your selection: "</span>);
+        <span class="k">scanf</span>(<span class="s">"%d"</span>, &meal);
+        <span class="k">switch</span>(meal) {
+            <span class="k">case</span> 1: <span class="k">printf</span>(<span class="s">"You have ordered Liberty shoes\n"</span>); <span class="k">break</span>;
+            <span class="k">case</span> 2: <span class="k">printf</span>(<span class="s">"You have ordered Nike shoes\n"</span>); <span class="k">break</span>;
+            <span class="k">case</span> 3: <span class="k">printf</span>(<span class="s">"You have ordered Reebok shoes\n"</span>); <span class="k">break</span>;
+            <span class="k">case</span> 4: <span class="k">printf</span>(<span class="s">"You have ordered Adidas shoes\n"</span>); <span class="k">break</span>;
+            <span class="k">default</span>: <span class="k">printf</span>(<span class="s">"Wrong entry\n"</span>);
+        }
+        <span class="k">printf</span>(<span class="s">"Enter choice(Y/N): "</span>);
+        <span class="k">scanf</span>(<span class="s">"%c"</span>, &ch);
+        ch = <span class="k">getchar</span>();
+    } <span class="k">while</span> (ch == <span class="s">'Y'</span> || ch == <span class="s">'y'</span>);
+    <span class="k">return</span> 0;
+}</pre></div>
+
+  <div class="section-divider"></div>
+
+  <!-- LAB 7 -->
+  <div class="lab-box">
+    <div class="lab-badge">🧪 LAB 7</div>
+    <h4>Sum Until Zero — While Loop</h4>
+    <p>Write a program that keeps accepting numbers from the user and adds them together. It stops when the user enters 0, then prints the total. You don't know how many numbers they'll enter — perfect for <code>while</code>!</p>
+    <ul class="task-list">
+      <li>Declare: <code>int num, total = 0;</code></li>
+      <li>Get the first number BEFORE the loop</li>
+      <li>Loop while num != 0</li>
+      <li>Inside loop: add to total, get next number</li>
+      <li>After loop: print total</li>
+    </ul>
+    <div class="btn-row">
+      <button class="btn btn-hint" onclick="toggleBox('hint7a')">💡 Hint 1</button>
+      <button class="btn btn-hint" onclick="toggleBox('hint7b')">💡 Hint 2</button>
+      <button class="btn btn-answer" onclick="toggleBox('ans7')">✅ Show Answer</button>
+    </div>
+    <div class="hint-box" id="hint7a">
+      The pattern for while with user input is: get input → check → process. Read the first number BEFORE the while: <code>scanf("%d", &num);</code> then <code>while (num != 0) { total += num; scanf("%d", &num); }</code>
+    </div>
+    <div class="hint-box" id="hint7b">
+      Why read the number before the loop? Because the while condition needs to see it first! If you read INSIDE the loop, you can't check it in the while() condition on the first pass.
+    </div>
+    <div class="answer-box" id="ans7">
+      <div class="code-block"><pre><span class="k">#include</span> <span class="s">&lt;stdio.h&gt;</span>
+<span class="k">int</span> main() {
+    <span class="k">int</span> num, total = 0;
+    <span class="k">printf</span>(<span class="s">"Enter numbers (0 to stop):\n"</span>);
+    <span class="k">scanf</span>(<span class="s">"%d"</span>, &num);     <span class="c">// Read FIRST number before loop</span>
+
+    <span class="k">while</span> (num != 0) {
+        total += num;       <span class="c">// Add to running total</span>
+        <span class="k">scanf</span>(<span class="s">"%d"</span>, &num); <span class="c">// Read NEXT number (loop continues if != 0)</span>
+    }
+
+    <span class="k">printf</span>(<span class="s">"Total sum: %d\n"</span>, total);
+    <span class="k">return</span> 0;
+}</pre></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== REFACTOR ===== -->
+<div id="refactor" class="section">
+<div class="card">
+  <h2>🛠 Refactor: For vs While — The Factorial Challenge</h2>
+
+  <div class="callout">
+    <div class="label">🎯 The Big Idea</div>
+    <p>A <strong>for loop</strong> and a <strong>while loop</strong> can do EXACTLY the same thing — they're just different syntax for the same idea. The key insight: any for loop can be rewritten as a while loop and vice versa!</p>
+  </div>
+
+  <h3>Version 1 — Factorial with For Loop (You already saw this!)</h3>
+  <div class="code-block"><pre><span class="k">#include</span> <span class="s">&lt;stdio.h&gt;</span>
+<span class="k">int</span> main() {
+    <span class="k">int</span> num;
+    <span class="k">long int</span> fact = 1;
+    <span class="k">printf</span>(<span class="s">"Enter a number: "</span>);
+    <span class="k">scanf</span>(<span class="s">"%d"</span>, &num);
+
+    <span class="k">for</span> (<span class="k">int</span> i = 1; i <= num; i++) {
+        fact *= i;
+    }
+
+    <span class="k">printf</span>(<span class="s">"Factorial of %d is %ld\n"</span>, num, fact);
+    <span class="k">return</span> 0;
+}</pre></div>
+
+  <div class="infobox blue">
+    <h4>🤔 Now think about this...</h4>
+    <p>In the for loop version, can you identify the 3 parts?</p>
+    <ul>
+      <li><strong>Initialisation:</strong> <code>int i = 1</code></li>
+      <li><strong>Condition:</strong> <code>i &lt;= num</code></li>
+      <li><strong>Increment:</strong> <code>i++</code></li>
+    </ul>
+    <p>To convert to while, you simply <strong>move</strong> these 3 parts to different places! The initialisation goes BEFORE the while. The condition goes IN the while(). The increment goes at the END of the loop body.</p>
+  </div>
+
+  <!-- BIG REFACTOR LAB -->
+  <div class="lab-box">
+    <div class="lab-badge">🧪 LAB 8 — The Main Challenge!</div>
+    <h4>Convert the Factorial to a While Loop!</h4>
+    <p>Using what you know, rewrite the factorial program using a <code>while</code> loop instead of <code>for</code>. The output should be IDENTICAL.</p>
+    <ul class="task-list">
+      <li>You need ALL the same variables: num, fact, and a counter</li>
+      <li>Initialise the counter BEFORE the while</li>
+      <li>The while condition takes the place of the for condition</li>
+      <li>The increment must go INSIDE the while body</li>
+    </ul>
+    <div class="btn-row">
+      <button class="btn btn-hint" onclick="toggleBox('hint8a')">💡 Hint 1: Structure</button>
+      <button class="btn btn-hint" onclick="toggleBox('hint8b')">💡 Hint 2: Counter</button>
+      <button class="btn btn-hint" onclick="toggleBox('hint8c')">💡 Hint 3: Almost there</button>
+      <button class="btn btn-answer" onclick="toggleBoxEgg('ans8','egg_factorial')">✅ Show Answer</button>
+    </div>
+    <div class="hint-box" id="hint8a">
+      Start with: <code>int i = 1;</code> declared right after your other variables. This is your counter — it's the same i from the for loop, just declared separately.
+    </div>
+    <div class="hint-box" id="hint8b">
+      Your while condition is: <code>while (i &lt;= num)</code> — this is EXACTLY the same as the middle part of the for loop! The body does the same multiplication: <code>fact *= i;</code>
+    </div>
+    <div class="hint-box" id="hint8c">
+      Don't forget to put <code>i++</code> at the END inside the while body! If you forget it, i never changes, the condition is always true, and you get an infinite loop — just like accidentally leaving the increment out of a for loop!
+    </div>
+    <div class="answer-box" id="ans8">
+      <div class="code-block"><pre><span class="k">#include</span> <span class="s">&lt;stdio.h&gt;</span>
+<span class="k">int</span> main() {
+    <span class="k">int</span> num;
+    <span class="k">long int</span> fact = 1;
+    <span class="k">int</span> i = 1;   <span class="c">// ← init moved OUT of loop header</span>
+
+    <span class="k">printf</span>(<span class="s">"Enter a number: "</span>);
+    <span class="k">scanf</span>(<span class="s">"%d"</span>, &num);
+
+    <span class="k">while</span> (i <= num) {  <span class="c">// ← condition same as for</span>
+        fact *= i;       <span class="c">// ← body same as for</span>
+        i++;             <span class="c">// ← increment moved INTO body</span>
+    }
+
+    <span class="k">printf</span>(<span class="s">"Factorial of %d is %ld\n"</span>, num, fact);
+    <span class="k">return</span> 0;
+}</pre></div>
+
+      <div class="compare-grid">
+        <div class="compare-card for-card">
+          <h4>FOR Version</h4>
+          <div class="code-block" style="font-size:.82rem;"><pre><span class="k">int</span> i; <span class="c">// inside header</span>
+<span class="k">for</span>(i=1; i&lt;=n; i++) {
+    fact *= i;
+}</pre></div>
+        </div>
+        <div class="compare-card while-card">
+          <h4>WHILE Version</h4>
+          <div class="code-block" style="font-size:.82rem;"><pre><span class="k">int</span> i = 1; <span class="c">// BEFORE loop</span>
+<span class="k">while</span>(i &lt;= n) {
+    fact *= i;
+    i++; <span class="c">// INSIDE loop</span>
+}</pre></div>
+        </div>
+      </div>
+      <p>🎯 <strong>Both produce IDENTICAL output!</strong> The structure is the same — the syntax is just arranged differently. In professional code, <code>for</code> is preferred when you know the count; <code>while</code> is preferred for open-ended loops.</p>
+    </div>
+  </div>
+
+  <h3>✅ One More: Bonus For vs While Side by Side</h3>
+  <div class="compare-grid">
+    <div class="compare-card for-card">
+      <h4>Times Table (For)</h4>
+      <div class="code-block" style="font-size:.82rem;"><pre><span class="k">for</span> (i=1; i&lt;=12; i++) {
+    <span class="k">printf</span>(<span class="s">"%d x %d = %d\n"</span>,
+        n, i, n*i);
+}</pre></div>
+    </div>
+    <div class="compare-card while-card">
+      <h4>Times Table (While)</h4>
+      <div class="code-block" style="font-size:.82rem;"><pre>i = 1;
+<span class="k">while</span> (i &lt;= 12) {
+    <span class="k">printf</span>(<span class="s">"%d x %d = %d\n"</span>,
+        n, i, n*i);
+    i++;
+}</pre></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== QUIZ ===== -->
+<div id="quiz" class="section">
+<div class="card">
+  <h2>🏆 Final Knowledge Check — 25 Questions!</h2>
+  <p>Time to prove your mastery! Answer all 25 questions to earn your badge.</p>
+  <div class="progress-wrap"><div class="progress-fill" id="q-progress"></div></div>
+
+  <!-- Q1 -->
+  <div class="quiz-q" data-correct="b">
+    <h4>1. What does <code>C += A</code> mean in full?</h4>
+    <div class="quiz-opts">
+      <div class="quiz-opt" data-val="a" onclick="pickOpt(this)">A) C = A + C</div>
+      <div class="quiz-opt" data-val="b" onclick="pickOpt(this)">B) C = C + A</div>
+      <div class="quiz-opt" data-val="c" onclick="pickOpt(this)">C) A = C + A</div>
+      <div class="quiz-opt" data-val="d" onclick="pickOpt(this)">D) C = A</div>
+    </div>
+    <div class="qfeedback"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="quiz-q" data-correct="a">
+    <h4>2. Given <code>int x = 5;</code> — what does <code>printf("%d", x++);</code> print?</h4>
+    <div class="quiz-opts">
+      <div class="quiz-opt" data-val="a" onclick="pickOpt(this)">A) 5</div>
+      <div class="quiz-opt" data-val="b" onclick="pickOpt(this)">B) 6</div>
+      <div class="quiz-opt" data-val="c" onclick="pickOpt(this)">C) 4</div>
+      <div class="quiz-opt" data-val="d" onclick="pickOpt(this)">D) Error</div>
+    </div>
+    <div class="qfeedback"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="quiz-q" data-correct="b">
+    <h4>3. Given <code>int x = 5;</code> — what does <code>printf("%d", ++x);</code> print?</h4>
+    <div class="quiz-opts">
+      <div class="quiz-opt" data-val="a" onclick="pickOpt(this)">A) 5</div>
+      <div class="quiz-opt" data-val="b" onclick="pickOpt(this)">B) 6</div>
+      <div class="quiz-opt" data-val="c" onclick="pickOpt(this)">C) 4</div>
+      <div class="quiz-opt" data-val="d" onclick="pickOpt(this)">D) 0</div>
+    </div>
+    <div class="qfeedback"></div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="quiz-q" data-correct="c">
+    <h4>4. What is the result of <code>17 % 5</code>?</h4>
+    <div class="quiz-opts">
+      <div class="quiz-opt" data-val="a" onclick="pickOpt(this)">A) 3</div>
+      <div class="quiz-opt" data-val="b" onclick="pickOpt(this)">B) 2</div>
+      <div class="quiz-opt" data-val="c" onclick="pickOpt(this)">C) 2</div>
+      <div class="quiz-opt" data-val="d" onclick="pickOpt(this)">D) 0</div>
+    </div>
+    <div class="qfeedback"></div>
+  </div>
+
+  <!-- Q5 — rewritten Q4 to avoid dup -->
+  <div class="quiz-q" data-correct="b">
+    <h4>5. What is the result of <code>10 % 3</code>?</h4>
+    <div class="quiz-opts">
+      <div class="quiz-opt" data-val="a" onclick="pickOpt(this)">A) 3</div>
+      <div class="quiz-opt" data-val="b" onclick="pickOpt(this)">B) 1</div>
+      <div class="quiz-opt" data-val="c" onclick="pickOpt(this)">C) 0</div>
+      <div class="quiz-opt" data-val="d" onclick="pickOpt(this)">D) 10</div>
+    </div>
+    <div class="qfeedback"></div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="quiz-q" data-correct="d">
+    <h4>6. Given <code>int C=10, A=3;</code> then <code>C *= A;</code> — what is C?</h4>
+    <div class="quiz-opts">
+      <div class="quiz-opt" data-val="a" onclick="pickOpt(this)">A) 3</div>
+      <div class="quiz-opt" data-val="b" onclick="pickOpt(this)">B) 10</div>
+      <div class="quiz-opt" data-val="c" onclick="pickOpt(this)">C) 13</div>
+      <div class="quiz-opt" data-val="d" onclick="pickOpt(this)">D) 30</div>
+    </div>
+    <div class="qfeedback"></div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="quiz-q" data-correct="a">
+    <h4>7. What is the purpose of <code>break</code> in a switch statement?</h4>
+    <div class="quiz-opts">
+      <div class="quiz-opt" data-val="a" onclick="pickOpt(this)">A) Exit the switch after a case matches</div>
+      <div class="quiz-opt" data-val="b" onclick="pickOpt(this)">B) Skip to the next case</div>
+      <div class="quiz-opt" data-val="c" onclick="pickOpt(this)">C) Exit the entire program</div>
+      <div class="quiz-opt" data-val="d" onclick="pickOpt(this)">D) Break the loop</div>
+    </div>
+    <div class="qfeedback"></div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="quiz-q" data-correct="c">
+    <h4>8. What happens if you forget <code>break</code> in a switch case?</h4>
+    <div class="quiz-opts">
+      <div class="quiz-opt" data-val="a" onclick="pickOpt(this)">A) A compile error</div>
+      <div class="quiz-opt" data-val="b" onclick="pickOpt(this)">B) The program crashes</div>
+      <div class="quiz-opt" data-val="c" onclick="pickOpt(this)">C) Execution falls through to the next case</div>
+      <div class="quiz-opt" data-val="d" onclick="pickOpt(this)">D) Nothing, it still works correctly</div>
+    </div>
+    <div class="qfeedback"></div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="quiz-q" data-correct="b">
+    <h4>9. In a <code>for(i=0; i&lt;5; i++)</code> loop, how many times does the body execute?</h4>
+    <div class="quiz-opts">
+      <div class="quiz-opt" data-val="a" onclick="pickOpt(this)">A) 4</div>
+      <div class="quiz-opt" data-val="b" onclick="pickOpt(this)">B) 5</div>
+      <div class="quiz-opt" data-val="c" onclick="pickOpt(this)">C) 6</div>
+      <div class="quiz-opt" data-val="d" onclick="pickOpt(this)">D) 0</div>
+    </div>
+    <div class="qfeedback"></div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="quiz-q" data-correct="d">
+    <h4>10. What is the key difference between <code>for</code> and <code>while</code> loops?</h4>
+    <div class="quiz-opts">
+      <div class="quiz-opt" data-val="a" onclick="pickOpt(this)">A) for is faster than while</div>
+      <div class="quiz-opt" data-val="b" onclick="pickOpt(this)">B) while can only count up, for can count down</div>
+      <div class="quiz-opt" data-val="c" onclick="pickOpt(this)">C) for supports break, while does not</div>
+      <div class="quiz-opt" data-val="d" onclick="pickOpt(this)">D) for suits known counts; while suits unknown/conditional iterations</div>
+    </div>
+    <div class="qfeedback"></div>
+  </div>
+
+  <!-- Q11 -->
+  <div class="quiz-q" data-correct="c">
+    <h4>11. What does a <code>do...while</code> loop guarantee?</h4>
+    <div class="quiz-opts">
+      <div class="quiz-opt" data-val="a" onclick="pickOpt(this)">A) The loop runs at least twice</div>
+      <div class="quiz-opt" data-val="b" onclick="pickOpt(this)">B) The condition is checked before anything runs</div>
+      <div class="quiz-opt" data-val="c" onclick="pickOpt(this)">C) The loop body runs at least once</div>
+      <div class="quiz-opt" data-val="d" onclick="pickOpt(this)">D) The loop never runs if condition is false</div>
+    </div>
+    <div class="qfeedback"></div>
+  </div>
+
+  <!-- Q12 -->
+  <div class="quiz-q" data-correct="a">
+    <h4>12. Which logical operator returns true ONLY when BOTH conditions are true?</h4>
+    <div class="quiz-opts">
+      <div class="quiz-opt" data-val="a" onclick="pickOpt(this)">A) &&</div>
+      <div class="quiz-opt" data-val="b" onclick="pickOpt(this)">B) ||</div>
+      <div class="quiz-opt" data-val="c" onclick="pickOpt(this)">C) !</div>
+      <div class="quiz-opt" data-val="d" onclick="pickOpt(this)">D) ==</div>
+    </div>
+    <div class="qfeedback"></div>
+  </div>
+
+  <!-- Q13 -->
+  <div class="quiz-q" data-correct="b">
+    <h4>13. What is 5! (5 factorial)?</h4>
+    <div class="quiz-opts">
+      <div class="quiz-opt" data-val="a" onclick="pickOpt(this)">A) 25</div>
+      <div class="quiz-opt" data-val="b" onclick="pickOpt(this)">B) 120</div>
+      <div class="quiz-opt" data-val="c" onclick="pickOpt(this)">C) 60</div>
+      <div class="quiz-opt" data-val="d" onclick="pickOpt(this)">D) 15</div>
+    </div>
+    <div class="qfeedback"></div>
+  </div>
+
+  <!-- Q14 -->
+  <div class="quiz-q" data-correct="c">
+    <h4>14. In the factorial for-loop, why is <code>fact</code> initialised to 1 (not 0)?</h4>
+    <div class="quiz-opts">
+      <div class="quiz-opt" data-val="a" onclick="pickOpt(this)">A) Because 0 is not a valid integer</div>
+      <div class="quiz-opt" data-val="b" onclick="pickOpt(this)">B) Because 1 is the first number</div>
+      <div class="quiz-opt" data-val="c" onclick="pickOpt(this)">C) Because multiplying by 0 would make the result 0 always</div>
+      <div class="quiz-opt" data-val="d" onclick="pickOpt(this)">D) It does not matter — 0 or 1 both work</div>
+    </div>
+    <div class="qfeedback"></div>
+  </div>
+
+  <!-- Q15 -->
+  <div class="quiz-q" data-correct="a">
+    <h4>15. When converting a for loop to a while loop, where does the initialisation go?</h4>
+    <div class="quiz-opts">
+      <div class="quiz-opt" data-val="a" onclick="pickOpt(this)">A) Before the while loop</div>
+      <div class="quiz-opt" data-val="b" onclick="pickOpt(this)">B) Inside the while() condition</div>
+      <div class="quiz-opt" data-val="c" onclick="pickOpt(this)">C) At the end of the loop body</div>
+      <div class="quiz-opt" data-val="d" onclick="pickOpt(this)">D) After the while loop</div>
+    </div>
+    <div class="qfeedback"></div>
+  </div>
+
+  <!-- Q16 -->
+  <div class="quiz-q" data-correct="d">
+    <h4>16. When converting a for loop to a while loop, where does the increment go?</h4>
+    <div class="quiz-opts">
+      <div class="quiz-opt" data-val="a" onclick="pickOpt(this)">A) Before the while loop</div>
+      <div class="quiz-opt" data-val="b" onclick="pickOpt(this)">B) In the while() condition</div>
+      <div class="quiz-opt" data-val="c" onclick="pickOpt(this)">C) Right after the while loop</div>
+      <div class="quiz-opt" data-val="d" onclick="pickOpt(this)">D) At the END of the while loop body</div>
+    </div>
+    <div class="qfeedback"></div>
+  </div>
+
+  <!-- Q17 -->
+  <div class="quiz-q" data-correct="b">
+    <h4>17. Which operator checks if two values are NOT equal in C?</h4>
+    <div class="quiz-opts">
+      <div class="quiz-opt" data-val="a" onclick="pickOpt(this)">A) =</div>
+      <div class="quiz-opt" data-val="b" onclick="pickOpt(this)">B) !=</div>
+      <div class="quiz-opt" data-val="c" onclick="pickOpt(this)">C) !</div>
+      <div class="quiz-opt" data-val="d" onclick="pickOpt(this)">D) ==</div>
+    </div>
+    <div class="qfeedback"></div>
+  </div>
+
+  <!-- Q18 -->
+  <div class="quiz-q" data-correct="c">
+    <h4>18. What variable type should you use for the switch() variable?</h4>
+    <div class="quiz-opts">
+      <div class="quiz-opt" data-val="a" onclick="pickOpt(this)">A) float only</div>
+      <div class="quiz-opt" data-val="b" onclick="pickOpt(this)">B) double only</div>
+      <div class="quiz-opt" data-val="c" onclick="pickOpt(this)">C) int or char</div>
+      <div class="quiz-opt" data-val="d" onclick="pickOpt(this)">D) Any type works</div>
+    </div>
+    <div class="qfeedback"></div>
+  </div>
+
+  <!-- Q19 -->
+  <div class="quiz-q" data-correct="a">
+    <h4>19. What does the <code>default</code> case in a switch do?</h4>
+    <div class="quiz-opts">
+      <div class="quiz-opt" data-val="a" onclick="pickOpt(this)">A) Runs when no other case matches</div>
+      <div class="quiz-opt" data-val="b" onclick="pickOpt(this)">B) Runs before all other cases</div>
+      <div class="quiz-opt" data-val="c" onclick="pickOpt(this)">C) Sets default values for variables</div>
+      <div class="quiz-opt" data-val="d" onclick="pickOpt(this)">D) Is required in every switch</div>
+    </div>
+    <div class="qfeedback"></div>
+  </div>
+
+  <!-- Q20 -->
+  <div class="quiz-q" data-correct="d">
+    <h4>20. Given <code>int C=20, A=5;</code> — after <code>C /= A;</code> then <code>C %= 3;</code>, what is C?</h4>
+    <div class="quiz-opts">
+      <div class="quiz-opt" data-val="a" onclick="pickOpt(this)">A) 4</div>
+      <div class="quiz-opt" data-val="b" onclick="pickOpt(this)">B) 3</div>
+      <div class="quiz-opt" data-val="c" onclick="pickOpt(this)">C) 0</div>
+      <div class="quiz-opt" data-val="d" onclick="pickOpt(this)">D) 1</div>
+    </div>
+    <div class="qfeedback"></div>
+  </div>
+
+  <!-- Q21 -->
+  <div class="quiz-q" data-correct="b">
+    <h4>21. What is an infinite loop and what causes it in a while loop?</h4>
+    <div class="quiz-opts">
+      <div class="quiz-opt" data-val="a" onclick="pickOpt(this)">A) A loop that runs 1000 times</div>
+      <div class="quiz-opt" data-val="b" onclick="pickOpt(this)">B) A loop that never ends, usually caused by forgetting to increment the counter</div>
+      <div class="quiz-opt" data-val="c" onclick="pickOpt(this)">C) A loop inside another loop</div>
+      <div class="quiz-opt" data-val="d" onclick="pickOpt(this)">D) A loop with no body</div>
+    </div>
+    <div class="qfeedback"></div>
+  </div>
+
+  <!-- Q22 -->
+  <div class="quiz-q" data-correct="c">
+    <h4>22. What is <code>printf("Result: %d\n", a % b);</code> — what does <code>%d</code> represent?</h4>
+    <div class="quiz-opts">
+      <div class="quiz-opt" data-val="a" onclick="pickOpt(this)">A) The modulus operator</div>
+      <div class="quiz-opt" data-val="b" onclick="pickOpt(this)">B) A percentage sign</div>
+      <div class="quiz-opt" data-val="c" onclick="pickOpt(this)">C) A format specifier for printing integers</div>
+      <div class="quiz-opt" data-val="d" onclick="pickOpt(this)">D) A variable name</div>
+    </div>
+    <div class="qfeedback"></div>
+  </div>
+
+  <!-- Q23 -->
+  <div class="quiz-q" data-correct="a">
+    <h4>23. Which is the correct condition to check if a player's score is between 60 and 79 (inclusive)?</h4>
+    <div class="quiz-opts">
+      <div class="quiz-opt" data-val="a" onclick="pickOpt(this)">A) score >= 60 && score <= 79</div>
+      <div class="quiz-opt" data-val="b" onclick="pickOpt(this)">B) score >= 60 || score <= 79</div>
+      <div class="quiz-opt" data-val="c" onclick="pickOpt(this)">C) score > 60 && score < 79</div>
+      <div class="quiz-opt" data-val="d" onclick="pickOpt(this)">D) 60 <= score >= 79</div>
+    </div>
+    <div class="qfeedback"></div>
+  </div>
+
+  <!-- Q24 -->
+  <div class="quiz-q" data-correct="b">
+    <h4>24. In the for loop factorial: <code>for(i=1; i&lt;=num; i++) { fact *= i; }</code> — if num=0, what is fact?</h4>
+    <div class="quiz-opts">
+      <div class="quiz-opt" data-val="a" onclick="pickOpt(this)">A) 0</div>
+      <div class="quiz-opt" data-val="b" onclick="pickOpt(this)">B) 1</div>
+      <div class="quiz-opt" data-val="c" onclick="pickOpt(this)">C) Error</div>
+      <div class="quiz-opt" data-val="d" onclick="pickOpt(this)">D) Undefined</div>
+    </div>
+    <div class="qfeedback"></div>
+  </div>
+
+  <!-- Q25 -->
+  <div class="quiz-q" data-correct="d">
+    <h4>25. Why is switch preferred over a long if-else chain for menu selection?</h4>
+    <div class="quiz-opts">
+      <div class="quiz-opt" data-val="a" onclick="pickOpt(this)">A) Switch supports float values</div>
+      <div class="quiz-opt" data-val="b" onclick="pickOpt(this)">B) Switch doesn't need curly braces</div>
+      <div class="quiz-opt" data-val="c" onclick="pickOpt(this)">C) Switch is the only way to handle menus</div>
+      <div class="quiz-opt" data-val="d" onclick="pickOpt(this)">D) Switch is cleaner, more readable and the compiler optimises it with a jump table</div>
+    </div>
+    <div class="qfeedback"></div>
+  </div>
+
+  <button class="btn btn-submit" style="width:100%;font-size:1.1rem;padding:18px;" onclick="submitQuiz()">🚀 Submit &amp; Get My Score!</button>
+
+  <div class="result-box" id="result-box">
+    <div class="trophy" id="trophy-icon">🏆</div>
+    <div class="result-score" id="result-score">0/25</div>
+    <p id="result-msg" style="font-size:1.2rem;color:#c0d4ee;margin:10px 0;"></p>
+    <button class="btn btn-submit" onclick="resetQuiz()" style="margin-top:15px;">🔄 Try Again</button>
+  </div>
+</div>
+</div>
+
+</div><!-- end container -->
+
+<script>
+// XP System
+let xp = 0;
+function addXP(pts){ xp += pts; const max=500; const pct=Math.min((xp/max)*100,100); document.getElementById('xp-fill').style.width=pct+'%'; document.getElementById('xp-text').textContent=xp+' XP'; }
+
+// Section Navigation
+function showSection(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  addXP(10);
+}
+
+// Hint/Answer toggles
+function toggleBox(id){ const el=document.getElementById(id); el.classList.toggle('show'); addXP(5); }
+function toggleBoxEgg(answerId, eggId){ toggleBox(answerId); triggerEgg(eggId); addXP(20); }
+
+// Easter Eggs
+const eggs = {
+  egg_67: { title:"🎶 6-7 Easter Egg!", body:"Nice catch! 6 and 7 are famous in the Caribbean — Machel Montano's legendary '6-7' soca riddim! 🎺 And you just proved you understand post-increment! x=6 prints 6 (then becomes 7). Just like the rhythm — everything in perfect timing!" },
+  egg_roblox: { title:"🎮 Roblox Unlocked!", body:"Achievement Unlocked: 'Dragon's Lair Coder' 🐉<br>Real Roblox developers write Lua, but the LOGIC you just used — if/else for zone access, switch for menu selection — is IDENTICAL to what goes inside Roblox game scripts! You're already thinking like a game dev!" },
+  egg_minecraft: { title:"⛏️ CREEPER? AW MAN!", body:"You just built a Minecraft-style shop using switch/case! 🧱<br>Fun fact: Minecraft itself is written in Java, but the switch logic you wrote works the same way. Notch used if/else chaining early on — refactoring to switch made the code WAY cleaner. You just did what Notch did!" },
+  egg_factorial: { title:"🏆 VICTORY ROYALE!", body:"YOOOO!! You converted the factorial from for to while — that's the single most important conceptual leap in this whole lab! 🎉<br>You now understand that ALL loops are really the same structure in different clothing. This skill will serve you for EVERY language you ever learn — Python, Java, JavaScript — they all have for and while for the same reason! GG! 💪" }
+};
+
+function triggerEgg(id){ if(!eggs[id]) return; document.getElementById('egg-title').textContent=eggs[id].title; document.getElementById('egg-body').innerHTML=eggs[id].body; document.getElementById('easter-egg').classList.add('show'); document.getElementById('overlay').classList.add('show'); }
+function closeEgg(){ document.getElementById('easter-egg').classList.remove('show'); document.getElementById('overlay').classList.remove('show'); }
+
+// Quiz
+function pickOpt(el){ const q=el.closest('.quiz-q'); q.querySelectorAll('.quiz-opt').forEach(o=>o.classList.remove('chosen')); el.classList.add('chosen'); updateQProgress(); }
+
+function updateQProgress(){ const total=document.querySelectorAll('.quiz-q').length; const answered=document.querySelectorAll('.quiz-opt.chosen').length; document.getElementById('q-progress').style.width=(answered/total*100)+'%'; }
+
+function submitQuiz(){
+  const questions=document.querySelectorAll('.quiz-q');
+  let correct=0;
+  questions.forEach(q=>{
+    const ans=q.dataset.correct;
+    const chosen=q.querySelector('.quiz-opt.chosen');
+    const fb=q.querySelector('.qfeedback');
+    if(chosen){
+      if(chosen.dataset.val===ans){ correct++; chosen.classList.add('correct'); fb.textContent='✓ Correct!'; fb.className='qfeedback show ok'; }
+      else{ chosen.classList.add('wrong'); q.querySelector('[data-val="'+ans+'"]').classList.add('correct'); fb.textContent='✗ Incorrect — the correct answer is highlighted in green.'; fb.className='qfeedback show no'; }
+    } else { fb.textContent='⚠️ No answer selected'; fb.className='qfeedback show no'; }
+  });
+  const pct=correct/questions.length;
+  const rb=document.getElementById('result-box'); rb.classList.add('show');
+  document.getElementById('result-score').textContent=correct+'/'+questions.length;
+  const msgs=[
+    [.9,'🌟 LEGENDARY! You\'ve mastered C fundamentals — time to teach the class!','🏆'],
+    [.75,'🔥 Excellent! Strong understanding — review your misses and you\'ll be perfect!','🥇'],
+    [.6,'👍 Good effort! Re-read the sections you struggled with and retry.','🥈'],
+    [.4,'📚 Keep studying! Focus on operators and loops then retake.','💪'],
+    [0,'🎮 Don\'t give up — revisit each section and try again. You\'ve got this!','🌱']
+  ];
+  for(const [threshold, msg, icon] of msgs){ if(pct>=threshold){ document.getElementById('result-msg').textContent=msg; document.getElementById('trophy-icon').textContent=icon; break; } }
+  addXP(correct*15);
+  rb.scrollIntoView({behavior:'smooth'});
+}
+
+function resetQuiz(){
+  document.querySelectorAll('.quiz-opt').forEach(o=>o.className='quiz-opt');
+  document.querySelectorAll('.qfeedback').forEach(f=>f.className='qfeedback');
+  document.getElementById('result-box').classList.remove('show');
+  document.getElementById('q-progress').style.width='0%';
+  document.getElementById('quiz').scrollIntoView({behavior:'smooth'});
+}
+</script>
+</body>
+</html>
